@@ -116,29 +116,53 @@ export default function HeroBackground() {
           <path d="M 1000 350 Q 750 450 500 320 T 150 420" opacity="0.6" />
         </g>
 
-        {/* Dynamic Nodes along the vector path */}
-        <circle cx="250" cy="80" r="4" className="fill-accent animate-ping" opacity="0.4" />
+        {/* Radar Pulse Rings & Floating Nodes */}
+        <motion.circle
+          cx="250"
+          cy="80"
+          animate={{ r: [3, 10, 3], opacity: [0.8, 0, 0.8] }}
+          transition={{ duration: 3.5, repeat: Infinity, ease: 'easeInOut' }}
+          fill="none"
+          stroke="var(--accent)"
+          strokeWidth="1"
+        />
         <circle cx="250" cy="80" r="2.5" className="fill-accent" />
 
-        <circle cx="750" cy="425" r="4" className="fill-emerald-500 animate-ping" opacity="0.4" />
+        <motion.circle
+          cx="750"
+          cy="425"
+          animate={{ r: [3, 10, 3], opacity: [0.8, 0, 0.8] }}
+          transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut', delay: 1 }}
+          fill="none"
+          stroke="#10b981"
+          strokeWidth="1"
+        />
         <circle cx="750" cy="425" r="2.5" className="fill-emerald-500" />
       </svg>
 
-      {/* Living Interface Design & Code Floating Components with Parallax */}
+      {/* Living Interface Design & Code Floating Components with Micro Animations */}
       <motion.div
         style={{ x: springX, y: springY }}
         className="w-full h-full relative"
       >
         {/* TOP LEFT FAR NEGATIVE SPACE: Floating Design Token Chip */}
-        <div className="absolute top-14 left-[5%] hidden lg:flex flex-col gap-2 pointer-events-auto">
+        <motion.div
+          animate={{ y: [0, -6, 0] }}
+          transition={{ duration: 4.5, repeat: Infinity, ease: 'easeInOut' }}
+          className="absolute top-14 left-[5%] hidden lg:flex flex-col gap-2 pointer-events-auto"
+        >
           <div className="flex items-center gap-2 font-mono text-[10px] text-muted-foreground/80 bg-card/40 border border-border/60 hover:border-accent/60 hover:text-foreground px-3 py-1.5 rounded-full backdrop-blur-md shadow-sm transition-all duration-300 hover:scale-105 cursor-pointer">
             <span className="w-2 h-2 rounded-full bg-accent animate-pulse" />
             <span>DesignToken::radius(12px)</span>
           </div>
-        </div>
+        </motion.div>
 
         {/* TOP RIGHT FAR NEGATIVE SPACE: Floating Code Fragment Badge */}
-        <div className="absolute top-10 right-[5%] hidden md:flex flex-col items-end gap-2 pointer-events-auto">
+        <motion.div
+          animate={{ y: [0, -8, 0] }}
+          transition={{ duration: 5, repeat: Infinity, ease: 'easeInOut', delay: 0.5 }}
+          className="absolute top-10 right-[5%] hidden md:flex flex-col items-end gap-2 pointer-events-auto"
+        >
           <div className="flex items-center gap-2 font-mono text-[10px] text-muted-foreground/80 bg-card/40 border border-border/60 hover:border-emerald-500/60 hover:text-foreground px-3 py-1.5 rounded-xl backdrop-blur-md shadow-sm transition-all duration-300 hover:scale-105 cursor-pointer">
             <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
             <span>&lt;Button variant="ghost" /&gt;</span>
@@ -146,10 +170,14 @@ export default function HeroBackground() {
           <div className="font-mono text-[9px] text-muted-foreground/60 tracking-wider">
             display: flex; gap: 16px;
           </div>
-        </div>
+        </motion.div>
 
         {/* BOTTOM LEFT FAR NEGATIVE SPACE: UI Component Frame Outline */}
-        <div className="absolute bottom-20 left-[4%] hidden lg:block pointer-events-auto">
+        <motion.div
+          animate={{ y: [0, -7, 0] }}
+          transition={{ duration: 5.5, repeat: Infinity, ease: 'easeInOut', delay: 1 }}
+          className="absolute bottom-20 left-[4%] hidden lg:block pointer-events-auto"
+        >
           <div className="border border-border/60 bg-card/30 hover:border-accent/50 rounded-xl p-3.5 w-48 font-mono text-[10px] text-muted-foreground/80 flex flex-col gap-2 relative backdrop-blur-md shadow-sm transition-all duration-300 hover:scale-105 cursor-pointer">
             <div className="flex items-center justify-between text-[9px] border-b border-border/40 pb-1.5">
               <span className="font-bold text-foreground/80">UI::Card</span>
@@ -158,10 +186,14 @@ export default function HeroBackground() {
             <div className="h-2 w-3/4 bg-muted-foreground/20 rounded" />
             <div className="h-1.5 w-1/2 bg-muted-foreground/15 rounded" />
           </div>
-        </div>
+        </motion.div>
 
         {/* BOTTOM RIGHT FAR NEGATIVE SPACE: Design to Code Node Relationship */}
-        <div className="absolute bottom-16 right-[6%] hidden md:flex flex-col gap-2 pointer-events-auto">
+        <motion.div
+          animate={{ y: [0, -6, 0] }}
+          transition={{ duration: 4.8, repeat: Infinity, ease: 'easeInOut', delay: 1.5 }}
+          className="absolute bottom-16 right-[6%] hidden md:flex flex-col gap-2 pointer-events-auto"
+        >
           <div className="flex items-center gap-2 font-mono text-[10px] text-muted-foreground/80 bg-card/40 border border-border/60 hover:border-accent/60 hover:text-foreground px-3.5 py-1.5 rounded-full backdrop-blur-md shadow-sm transition-all duration-300 hover:scale-105 cursor-pointer">
             <span className="text-accent font-semibold">Design</span>
             <span className="text-muted-foreground/40">→</span>
@@ -169,7 +201,7 @@ export default function HeroBackground() {
             <span className="text-muted-foreground/40">→</span>
             <span className="text-emerald-500 font-bold">Code</span>
           </div>
-        </div>
+        </motion.div>
       </motion.div>
     </div>
   );
