@@ -11,23 +11,19 @@ export default function HeroBackground() {
   const mouseX = useMotionValue(0);
   const mouseY = useMotionValue(0);
 
-  // Smooth springs for 95% calm, 5% response
-  const springX = useSpring(mouseX, { stiffness: 40, damping: 25 });
-  const springY = useSpring(mouseY, { stiffness: 40, damping: 25 });
+  const springX = useSpring(mouseX, { stiffness: 45, damping: 25 });
+  const springY = useSpring(mouseY, { stiffness: 45, damping: 25 });
 
   const cursorX = useSpring(0, { stiffness: 60, damping: 30 });
   const cursorY = useSpring(0, { stiffness: 60, damping: 30 });
 
   useEffect(() => {
-    // Check reduced motion
     const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
     setReducedMotion(mediaQuery.matches);
-
     const handleMediaChange = (e: MediaQueryListEvent) => setReducedMotion(e.matches);
     mediaQuery.addEventListener('change', handleMediaChange);
 
-    // Check mobile
-    const checkMobile = () => setIsMobile(window.innerWidth < 768);
+    const checkMobile = () => setIsMobile(window.innerWidth < 1024);
     checkMobile();
     window.addEventListener('resize', checkMobile);
 
@@ -45,10 +41,9 @@ export default function HeroBackground() {
       if (reducedMotion || isMobile) return;
       const rect = heroElement.getBoundingClientRect();
 
-      // Verify cursor position is within Hero section viewport bounds
       if (
-        e.clientY >= rect.top - 50 &&
-        e.clientY <= rect.bottom + 50 &&
+        e.clientY >= rect.top - 60 &&
+        e.clientY <= rect.bottom + 60 &&
         e.clientX >= rect.left &&
         e.clientX <= rect.right
       ) {
@@ -62,7 +57,6 @@ export default function HeroBackground() {
         const centerX = rect.width / 2;
         const centerY = rect.height / 2;
 
-        // Smooth parallax offset
         mouseX.set(((x - centerX) / centerX) * 16);
         mouseY.set(((y - centerY) / centerY) * 16);
       } else {
@@ -82,14 +76,10 @@ export default function HeroBackground() {
       aria-hidden="true"
       className="absolute top-0 left-1/2 -translate-x-1/2 w-screen h-full pointer-events-none select-none overflow-hidden z-0"
     >
-      {/* Ambient Organic Light Orbs in Negative Space */}
-      <div className="absolute top-[-10%] left-[-5%] w-[450px] h-[450px] rounded-full bg-accent/10 dark:bg-accent/15 blur-[100px] pointer-events-none" />
-      <div className="absolute bottom-[-10%] right-[-5%] w-[500px] h-[500px] rounded-full bg-emerald-500/10 dark:bg-emerald-500/15 blur-[120px] pointer-events-none" />
-
-      {/* Full Hero Mouse Hover Spotlight Lens Beam */}
+      {/* Dynamic Cursor Spotlight Proximity Lens */}
       {!reducedMotion && !isMobile && (
         <motion.div
-          className="absolute w-[450px] h-[450px] rounded-full pointer-events-none transition-opacity duration-700 blur-3xl bg-accent/25 dark:bg-accent/35"
+          className="absolute w-[450px] h-[450px] rounded-full pointer-events-none transition-opacity duration-700 blur-3xl bg-cyan-500/15 dark:bg-cyan-500/25"
           style={{
             x: cursorX,
             y: cursorY,
@@ -100,108 +90,199 @@ export default function HeroBackground() {
         />
       )}
 
-      {/* SVG Organic Vector Connections */}
-      <svg className="w-full h-full absolute inset-0 opacity-40 dark:opacity-35">
+      {/* SVG Blueprint Vectors & Connecting Nodes Matching Reference Image */}
+      <svg className="w-full h-full absolute inset-0 opacity-60 dark:opacity-40">
         <defs>
-          <linearGradient id="gradient-line-1" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stopColor="var(--accent)" stopOpacity="0.2" />
-            <stop offset="50%" stopColor="var(--accent)" stopOpacity="0.7" />
-            <stop offset="100%" stopColor="#10b981" stopOpacity="0.2" />
-          </linearGradient>
+          <pattern
+            id="dot-grid"
+            width="24"
+            height="24"
+            patternUnits="userSpaceOnUse"
+          >
+            <circle cx="12" cy="12" r="0.8" className="fill-neutral-400/40 dark:fill-neutral-700/50" />
+          </pattern>
         </defs>
 
-        {/* Elegant Curved Vector Connections across screen boundaries */}
-        <g stroke="url(#gradient-line-1)" fill="none" strokeWidth="1.2" strokeDasharray="6 4">
-          <path d="M 50 120 Q 250 40 450 180 T 850 100" className="animate-pulse duration-1000" />
-          <path d="M 1000 350 Q 750 450 500 320 T 150 420" opacity="0.6" />
+        {/* Fine Blueprint Dot Grid */}
+        <rect width="100%" height="100%" fill="url(#dot-grid)" />
+
+        {/* Vector Curved Paths linking Design -> Code -> Product -> Right Margin */}
+        <g stroke="currentColor" fill="none" strokeWidth="1" className="text-cyan-500/40 dark:text-cyan-400/30">
+          {/* Main Flow Line connecting across Hero center */}
+          <path d="M 50 480 Q 250 450 450 510 T 850 480 Q 1100 420 1350 350" strokeDasharray="4 3" />
+          <path d="M 1200 120 Q 1300 200 1350 350 T 1280 600" opacity="0.6" strokeDasharray="3 3" />
+          <path d="M 100 180 Q 180 250 220 380" opacity="0.4" strokeDasharray="2 2" />
         </g>
 
-        {/* Radar Pulse Rings & Floating Nodes */}
-        <motion.circle
-          cx="250"
-          cy="80"
-          animate={{ r: [3, 10, 3], opacity: [0.8, 0, 0.8] }}
-          transition={{ duration: 3.5, repeat: Infinity, ease: 'easeInOut' }}
-          fill="none"
-          stroke="var(--accent)"
-          strokeWidth="1"
-        />
-        <circle cx="250" cy="80" r="2.5" className="fill-accent" />
+        {/* Cyan Glowing Nodes along Vector Paths */}
+        <g className="fill-cyan-500 dark:fill-cyan-400">
+          <circle cx="220" cy="495" r="3.5" />
+          <circle cx="450" cy="510" r="3.5" />
+          <circle cx="680" cy="495" r="3.5" />
+          <circle cx="1200" cy="120" r="3.5" />
+          <circle cx="1280" cy="280" r="3.5" />
+          <circle cx="1220" cy="480" r="3.5" />
+          <circle cx="1280" cy="600" r="3.5" />
+        </g>
 
+        {/* Radar Ring Pulses */}
         <motion.circle
-          cx="750"
-          cy="425"
-          animate={{ r: [3, 10, 3], opacity: [0.8, 0, 0.8] }}
-          transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut', delay: 1 }}
+          cx="450"
+          cy="510"
+          animate={{ r: [4, 12, 4], opacity: [0.8, 0, 0.8] }}
+          transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
           fill="none"
-          stroke="#10b981"
+          stroke="#06b6d4"
           strokeWidth="1"
         />
-        <circle cx="750" cy="425" r="2.5" className="fill-emerald-500" />
+        <motion.circle
+          cx="1280"
+          cy="280"
+          animate={{ r: [4, 12, 4], opacity: [0.8, 0, 0.8] }}
+          transition={{ duration: 4.5, repeat: Infinity, ease: 'easeInOut', delay: 1 }}
+          fill="none"
+          stroke="#06b6d4"
+          strokeWidth="1"
+        />
       </svg>
 
-      {/* Living Interface Design & Code Floating Components with Micro Animations */}
+      {/* Interactive Blueprint Elements & Cards Matching Reference Image */}
       <motion.div
         style={{ x: springX, y: springY }}
         className="w-full h-full relative"
       >
-        {/* TOP LEFT FAR NEGATIVE SPACE: Floating Design Token Chip */}
-        <motion.div
-          animate={{ y: [0, -6, 0] }}
-          transition={{ duration: 4.5, repeat: Infinity, ease: 'easeInOut' }}
-          className="absolute top-14 left-[5%] hidden lg:flex flex-col gap-2 pointer-events-auto"
-        >
-          <div className="flex items-center gap-2 font-mono text-[10px] text-muted-foreground/80 bg-card/40 border border-border/60 hover:border-accent/60 hover:text-foreground px-3 py-1.5 rounded-full backdrop-blur-md shadow-sm transition-all duration-300 hover:scale-105 cursor-pointer">
-            <span className="w-2 h-2 rounded-full bg-accent animate-pulse" />
-            <span>DesignToken::radius(12px)</span>
-          </div>
-        </motion.div>
+        {/* ================= LEFT MARGIN ELEMENTS ================= */}
 
-        {/* TOP RIGHT FAR NEGATIVE SPACE: Floating Code Fragment Badge */}
-        <motion.div
-          animate={{ y: [0, -8, 0] }}
-          transition={{ duration: 5, repeat: Infinity, ease: 'easeInOut', delay: 0.5 }}
-          className="absolute top-10 right-[5%] hidden md:flex flex-col items-end gap-2 pointer-events-auto"
-        >
-          <div className="flex items-center gap-2 font-mono text-[10px] text-muted-foreground/80 bg-card/40 border border-border/60 hover:border-emerald-500/60 hover:text-foreground px-3 py-1.5 rounded-xl backdrop-blur-md shadow-sm transition-all duration-300 hover:scale-105 cursor-pointer">
-            <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
-            <span>&lt;Button variant="ghost" /&gt;</span>
+        {/* 1. TOP LEFT: Spacing Scale Card & Typography Card */}
+        <div className="absolute top-12 left-[2.5%] hidden xl:flex gap-3 pointer-events-auto">
+          {/* Spacing Card */}
+          <div className="border border-border/70 bg-card/50 rounded-xl p-2.5 font-mono text-[9px] text-muted-foreground flex flex-col gap-1 backdrop-blur-md shadow-sm hover:border-cyan-500/50 hover:text-foreground transition-all duration-300">
+            <div className="text-cyan-500 font-bold text-[8px] uppercase tracking-wider mb-0.5">Spacing</div>
+            <div>4</div>
+            <div>8</div>
+            <div>16</div>
+            <div>24</div>
+            <div>32</div>
+            <div>48</div>
+            <div>64</div>
           </div>
-          <div className="font-mono text-[9px] text-muted-foreground/60 tracking-wider">
-            display: flex; gap: 16px;
-          </div>
-        </motion.div>
 
-        {/* BOTTOM LEFT FAR NEGATIVE SPACE: UI Component Frame Outline */}
-        <motion.div
-          animate={{ y: [0, -7, 0] }}
-          transition={{ duration: 5.5, repeat: Infinity, ease: 'easeInOut', delay: 1 }}
-          className="absolute bottom-20 left-[4%] hidden lg:block pointer-events-auto"
-        >
-          <div className="border border-border/60 bg-card/30 hover:border-accent/50 rounded-xl p-3.5 w-48 font-mono text-[10px] text-muted-foreground/80 flex flex-col gap-2 relative backdrop-blur-md shadow-sm transition-all duration-300 hover:scale-105 cursor-pointer">
-            <div className="flex items-center justify-between text-[9px] border-b border-border/40 pb-1.5">
-              <span className="font-bold text-foreground/80">UI::Card</span>
-              <span className="text-accent font-semibold">16px</span>
-            </div>
+          {/* Typography Card */}
+          <div className="border border-border/70 bg-card/50 rounded-xl p-3 font-mono text-[9px] text-muted-foreground flex flex-col gap-1 backdrop-blur-md shadow-sm h-fit hover:border-cyan-500/50 hover:text-foreground transition-all duration-300">
+            <div className="text-xl font-sans font-bold text-foreground mb-1">Aa</div>
+            <div className="text-[10px] text-foreground font-semibold">Inter</div>
+            <div>16 / 24</div>
+            <div>600</div>
+          </div>
+        </div>
+
+        {/* 2. MID LEFT: Wireframe Component Box & Badges */}
+        <div className="absolute top-[36%] left-[2%] hidden xl:flex flex-col items-center gap-2 pointer-events-auto">
+          <div className="bg-cyan-500/10 border border-cyan-500/30 text-cyan-600 dark:text-cyan-400 font-mono text-[9px] px-2 py-0.5 rounded-full font-bold">
+            24px
+          </div>
+
+          {/* Wireframe UI Box with Corner Anchor Handles */}
+          <div className="border border-dashed border-border/80 bg-card/30 rounded-xl p-3 w-40 flex flex-col gap-2 relative backdrop-blur-md shadow-sm">
+            <span className="absolute -top-1 -left-1 w-2 h-2 border border-cyan-500 bg-background" />
+            <span className="absolute -top-1 -right-1 w-2 h-2 border border-cyan-500 bg-background" />
+            <span className="absolute -bottom-1 -left-1 w-2 h-2 border border-cyan-500 bg-background" />
+            <span className="absolute -bottom-1 -right-1 w-2 h-2 border border-cyan-500 bg-background" />
+
             <div className="h-2 w-3/4 bg-muted-foreground/20 rounded" />
-            <div className="h-1.5 w-1/2 bg-muted-foreground/15 rounded" />
+            <div className="h-4 w-full bg-cyan-500/20 border border-cyan-500/40 rounded flex items-center px-2">
+              <div className="h-1.5 w-1/3 bg-cyan-500/60 rounded" />
+            </div>
+            <div className="h-2 w-1/2 bg-muted-foreground/20 rounded" />
           </div>
-        </motion.div>
 
-        {/* BOTTOM RIGHT FAR NEGATIVE SPACE: Design to Code Node Relationship */}
-        <motion.div
-          animate={{ y: [0, -6, 0] }}
-          transition={{ duration: 4.8, repeat: Infinity, ease: 'easeInOut', delay: 1.5 }}
-          className="absolute bottom-16 right-[6%] hidden md:flex flex-col gap-2 pointer-events-auto"
-        >
-          <div className="flex items-center gap-2 font-mono text-[10px] text-muted-foreground/80 bg-card/40 border border-border/60 hover:border-accent/60 hover:text-foreground px-3.5 py-1.5 rounded-full backdrop-blur-md shadow-sm transition-all duration-300 hover:scale-105 cursor-pointer">
-            <span className="text-accent font-semibold">Design</span>
-            <span className="text-muted-foreground/40">→</span>
-            <span>Component</span>
-            <span className="text-muted-foreground/40">→</span>
-            <span className="text-emerald-500 font-bold">Code</span>
+          <div className="border border-border/60 bg-card/40 text-muted-foreground font-mono text-[9px] px-2 py-0.5 rounded-md">
+            radius: 12px
           </div>
-        </motion.div>
+        </div>
+
+        {/* 3. BOTTOM LEFT: CSS Code Block Card */}
+        <div className="absolute bottom-16 left-[2%] hidden xl:block pointer-events-auto">
+          <div className="border border-border/70 bg-card/50 rounded-xl p-3 font-mono text-[9px] text-muted-foreground backdrop-blur-md shadow-sm w-48 flex flex-col gap-1 hover:border-cyan-500/50 transition-all duration-300">
+            <div className="flex gap-2"><span className="text-muted-foreground/40">01</span><span><span className="text-cyan-500">.card</span> &#123;</span></div>
+            <div className="flex gap-2"><span className="text-muted-foreground/40">02</span><span className="pl-2">display: flex;</span></div>
+            <div className="flex gap-2"><span className="text-muted-foreground/40">03</span><span className="pl-2">align-items: center;</span></div>
+            <div className="flex gap-2"><span className="text-muted-foreground/40">04</span><span className="pl-2">gap: <span className="text-cyan-500">16px</span>;</span></div>
+            <div className="flex gap-2"><span className="text-muted-foreground/40">05</span><span className="pl-2">padding: <span className="text-cyan-500">16px</span>;</span></div>
+            <div className="flex gap-2"><span className="text-muted-foreground/40">06</span><span className="pl-2">border-radius: <span className="text-cyan-500">12px</span>;</span></div>
+            <div className="flex gap-2"><span className="text-muted-foreground/40">07</span><span>&#125;</span></div>
+          </div>
+        </div>
+
+
+        {/* ================= HERO CENTER ELEMENTS ================= */}
+
+        {/* 4. TOP CENTER: UI -> Code Pill Badge */}
+        <div className="absolute top-10 left-[48%] hidden lg:block pointer-events-auto">
+          <div className="bg-cyan-500/10 border border-cyan-500/30 text-cyan-600 dark:text-cyan-400 font-mono text-[9px] px-2.5 py-1 rounded-full font-bold shadow-sm backdrop-blur-md">
+            UI → Code
+          </div>
+        </div>
+
+        {/* 5. CENTER RIGHT: React Button Component Code Snippet Card */}
+        <div className="absolute top-24 right-[28%] hidden lg:block pointer-events-auto">
+          <div className="border border-border/70 bg-card/60 rounded-xl p-3 font-mono text-[9px] text-muted-foreground backdrop-blur-md shadow-sm w-44 flex flex-col gap-1 hover:border-cyan-500/50 transition-all duration-300">
+            <div className="flex gap-2"><span className="text-muted-foreground/40">01</span><span>&lt;<span className="text-cyan-500 font-bold">Button</span></span></div>
+            <div className="flex gap-2"><span className="text-muted-foreground/40">02</span><span className="pl-2">type="primary"</span></div>
+            <div className="flex gap-2"><span className="text-muted-foreground/40">03</span><span className="pl-2">size="md"</span></div>
+            <div className="flex gap-2"><span className="text-muted-foreground/40">04</span><span className="pl-2">className="btn"</span></div>
+            <div className="flex gap-2"><span className="text-muted-foreground/40">05</span><span>&gt;</span></div>
+            <div className="flex gap-2"><span className="text-muted-foreground/40">06</span><span className="pl-2 text-foreground font-bold">Build</span></div>
+            <div className="flex gap-2"><span className="text-muted-foreground/40">07</span><span>&lt;/<span className="text-cyan-500 font-bold">Button</span>&gt;</span></div>
+          </div>
+        </div>
+
+        {/* 6. CENTER PIPELINE: Design, Code, Product Interactive Circle Badges */}
+        <div className="absolute top-[52%] left-[18%] hidden lg:flex items-center gap-24 pointer-events-auto z-10">
+          {/* Node 1: Design */}
+          <div className="flex flex-col items-center gap-1 group cursor-pointer">
+            <div className="w-12 h-12 rounded-full border border-border/80 bg-card/80 flex items-center justify-center text-foreground group-hover:border-cyan-500 group-hover:text-cyan-500 shadow-sm backdrop-blur-md transition-all duration-300 group-hover:scale-110">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 20h9"/><path d="16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+            </div>
+            <span className="font-mono text-[9px] text-muted-foreground group-hover:text-cyan-500 font-bold transition-colors">Design</span>
+          </div>
+
+          {/* Node 2: Code */}
+          <div className="flex flex-col items-center gap-1 group cursor-pointer">
+            <div className="w-12 h-12 rounded-full border border-border/80 bg-card/80 flex items-center justify-center text-foreground group-hover:border-cyan-500 group-hover:text-cyan-500 shadow-sm backdrop-blur-md transition-all duration-300 group-hover:scale-110">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+            </div>
+            <span className="font-mono text-[9px] text-muted-foreground group-hover:text-cyan-500 font-bold transition-colors">Code</span>
+          </div>
+
+          {/* Node 3: Product */}
+          <div className="flex flex-col items-center gap-1 group cursor-pointer">
+            <div className="w-12 h-12 rounded-full border border-border/80 bg-card/80 flex items-center justify-center text-foreground group-hover:border-cyan-500 group-hover:text-cyan-500 shadow-sm backdrop-blur-md transition-all duration-300 group-hover:scale-110">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
+            </div>
+            <span className="font-mono text-[9px] text-muted-foreground group-hover:text-cyan-500 font-bold transition-colors">Product</span>
+          </div>
+        </div>
+
+
+        {/* ================= RIGHT MARGIN ELEMENTS ================= */}
+
+        {/* 7. TOP RIGHT: Dev Mode Badge */}
+        <div className="absolute top-28 right-[3%] hidden xl:block pointer-events-auto">
+          <div className="border border-border/70 bg-card/50 rounded-xl px-3 py-1.5 font-mono text-[9px] text-muted-foreground flex items-center gap-1.5 backdrop-blur-md shadow-sm hover:border-cyan-500/50 transition-all duration-300">
+            <span className="w-1.5 h-1.5 rounded-full bg-cyan-500 animate-pulse" />
+            <span>Dev Mode</span>
+            <span className="text-cyan-500 font-bold pl-1">&gt;_</span>
+          </div>
+        </div>
+
+        {/* 8. BOTTOM RIGHT: Commit Badge */}
+        <div className="absolute bottom-16 right-[3%] hidden xl:block pointer-events-auto">
+          <div className="border border-border/70 bg-card/50 rounded-xl px-3 py-2 font-mono text-[9px] text-muted-foreground flex flex-col gap-0.5 backdrop-blur-md shadow-sm hover:border-cyan-500/50 transition-all duration-300">
+            <div>Commit</div>
+            <div className="text-cyan-500 font-bold">a1b2c3d</div>
+          </div>
+        </div>
       </motion.div>
     </div>
   );
