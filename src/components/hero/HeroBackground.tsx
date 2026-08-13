@@ -1,17 +1,26 @@
 import { useEffect, useState, useRef } from 'react';
 import { motion, useSpring, useMotionValue } from 'framer-motion';
 
+interface NodeParticle {
+  x: number;
+  y: number;
+  vx: number;
+  vy: number;
+  radius: number;
+  color: string;
+}
+
 export default function HeroBackground() {
   const [reducedMotion, setReducedMotion] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
   const [isHoveringHero, setIsHoveringHero] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
+  const canvasRef = useRef<HTMLCanvasElement>(null);
 
   // Motion values for smooth cursor parallax
   const mouseX = useMotionValue(0);
   const mouseY = useMotionValue(0);
 
-  // Smooth springs for 95% calm, 5% response
   const springX = useSpring(mouseX, { stiffness: 40, damping: 25 });
   const springY = useSpring(mouseY, { stiffness: 40, damping: 25 });
 
@@ -37,6 +46,7 @@ export default function HeroBackground() {
     };
   }, []);
 
+  // Full Hero mouse position tracking
   useEffect(() => {
     const heroElement = document.getElementById('home');
     if (!heroElement) return;
@@ -45,10 +55,9 @@ export default function HeroBackground() {
       if (reducedMotion || isMobile) return;
       const rect = heroElement.getBoundingClientRect();
 
-      // Verify cursor position is within Hero section viewport bounds
       if (
-        e.clientY >= rect.top - 50 &&
-        e.clientY <= rect.bottom + 50 &&
+        e.clientY >= rect.top - 60 &&
+        e.clientY <= rect.bottom + 60 &&
         e.clientX >= rect.left &&
         e.clientX <= rect.right
       ) {
@@ -62,7 +71,6 @@ export default function HeroBackground() {
         const centerX = rect.width / 2;
         const centerY = rect.height / 2;
 
-        // Smooth parallax offset
         mouseX.set(((x - centerX) / centerX) * 16);
         mouseY.set(((y - centerY) / centerY) * 16);
       } else {
@@ -75,6 +83,111 @@ export default function HeroBackground() {
     window.addEventListener('mousemove', handleHeroMouseMove);
     return () => window.removeEventListener('mousemove', handleHeroMouseMove);
   }, [reducedMotion, isMobile]);
+
+  // Dynamic Interactive Constellation Canvas Engine
+  useEffect(() => {
+    if (reducedMotion || isMobile || !canvasRef.current) return;
+    const canvas = canvasRef.current;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    let animId: number;
+    let width = (canvas.width = window.innerWidth);
+    let height = (canvas.height = canvas.parentElement?.clientHeight || 500);
+
+    const handleResize = () => {
+      width = canvas.width = window.innerWidth;
+      height = canvas.height = canvas.parentElement?.clientHeight || 500;
+    };
+    window.addEventListener('resize', handleResize);
+
+    // Initialize 20 floating constellation particles
+    const particleCount = 22;
+    const particles: NodeParticle[] = [];
+    for (let i = 0; i < particleCount; i++) {
+      particles.push({
+        x: Math.random() * width,
+        y: Math.random() * height,
+        vx: (Math.random() - 0.5) * 0.6,
+        vy: (Math.random() - 0.5) * 0.6,
+        radius: Math.random() * 1.5 + 1.5,
+        color: i % 3 === 0 ? '16, 185, 129' : '6, 182, 212',
+      });
+    }
+
+    const mousePos = { x: -1000, y: -1000 };
+    const unsubscribeX = cursorX.on('change', (v) => (mousePos.x = v));
+    const unsubscribeY = cursorY.on('change', (v) => (mousePos.y = v));
+
+    const render = () => {
+      ctx.clearRect(0, 0, width, height);
+
+      // Update and draw particles
+      for (let i = 0; i < particleCount; i++) {
+        const p = particles[i];
+        p.x += p.vx;
+        p.y += p.vy;
+
+        // Bounce on screen edges
+        if (p.x < 0 || p.x > width) p.vx *= -1;
+        if (p.y < 0 || p.y > height) p.vy *= -1;
+
+        // Mouse attraction physics when cursor is inside Hero
+        if (isHoveringHero) {
+          const dx = mousePos.x - p.x;
+          const dy = mousePos.y - p.y;
+          const dist = Math.sqrt(dx * dx + dy * dy);
+          if (dist < 180) {
+            p.x += (dx / dist) * 0.4;
+            p.y += (dy / dist) * 0.4;
+
+            // Draw line to mouse
+            const lineAlpha = (1 - dist / 180) * 0.35;
+            ctx.beginPath();
+            ctx.moveTo(p.x, p.y);
+            ctx.lineTo(mousePos.x, mousePos.y);
+            ctx.strokeStyle = `rgba(${p.color}, ${lineAlpha})`;
+            ctx.lineWidth = 0.8;
+            ctx.stroke();
+          }
+        }
+
+        // Draw connections between nearby nodes
+        for (let j = i + 1; j < particleCount; j++) {
+          const p2 = particles[j];
+          const dx = p2.x - p.x;
+          const dy = p2.y - p.y;
+          const dist = Math.sqrt(dx * dx + dy * dy);
+          if (dist < 140) {
+            const lineAlpha = (1 - dist / 140) * 0.25;
+            ctx.beginPath();
+            ctx.moveTo(p.x, p.y);
+            ctx.lineTo(p2.x, p2.y);
+            ctx.strokeStyle = `rgba(${p.color}, ${lineAlpha})`;
+            ctx.lineWidth = 0.7;
+            ctx.stroke();
+          }
+        }
+
+        // Draw particle dot
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(${p.color}, 0.65)`;
+        ctx.fill();
+      }
+
+      animId = requestAnimationFrame(render);
+    };
+
+    render();
+
+    return () => {
+      cancelAnimationFrame(animId);
+      window.removeEventListener('resize', handleResize);
+      unsubscribeX();
+      unsubscribeY();
+    };
+  }, [reducedMotion, isMobile, isHoveringHero]);
 
   return (
     <div
@@ -100,45 +213,10 @@ export default function HeroBackground() {
         />
       )}
 
-      {/* SVG Organic Vector Connections */}
-      <svg className="w-full h-full absolute inset-0 opacity-40 dark:opacity-35">
-        <defs>
-          <linearGradient id="gradient-line-1" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stopColor="var(--accent)" stopOpacity="0.2" />
-            <stop offset="50%" stopColor="var(--accent)" stopOpacity="0.7" />
-            <stop offset="100%" stopColor="#10b981" stopOpacity="0.2" />
-          </linearGradient>
-        </defs>
-
-        {/* Elegant Curved Vector Connections across screen boundaries */}
-        <g stroke="url(#gradient-line-1)" fill="none" strokeWidth="1.2" strokeDasharray="6 4">
-          <path d="M 50 120 Q 250 40 450 180 T 850 100" className="animate-pulse duration-1000" />
-          <path d="M 1000 350 Q 750 450 500 320 T 150 420" opacity="0.6" />
-        </g>
-
-        {/* Radar Pulse Rings & Floating Nodes */}
-        <motion.circle
-          cx="250"
-          cy="80"
-          animate={{ r: [3, 10, 3], opacity: [0.8, 0, 0.8] }}
-          transition={{ duration: 3.5, repeat: Infinity, ease: 'easeInOut' }}
-          fill="none"
-          stroke="var(--accent)"
-          strokeWidth="1"
-        />
-        <circle cx="250" cy="80" r="2.5" className="fill-accent" />
-
-        <motion.circle
-          cx="750"
-          cy="425"
-          animate={{ r: [3, 10, 3], opacity: [0.8, 0, 0.8] }}
-          transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut', delay: 1 }}
-          fill="none"
-          stroke="#10b981"
-          strokeWidth="1"
-        />
-        <circle cx="750" cy="425" r="2.5" className="fill-emerald-500" />
-      </svg>
+      {/* Dynamic 60fps Constellation Vector Network Canvas */}
+      {!reducedMotion && !isMobile && (
+        <canvas ref={canvasRef} className="absolute inset-0 w-full h-full opacity-60 dark:opacity-50" />
+      )}
 
       {/* Living Interface Design & Code Floating Components with Micro Animations */}
       <motion.div
