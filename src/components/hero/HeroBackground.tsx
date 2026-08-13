@@ -64,7 +64,7 @@ export default function HeroBackground() {
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
       aria-hidden="true"
-      className="absolute inset-0 pointer-events-none select-none overflow-hidden z-0"
+      className="absolute top-0 left-1/2 -translate-x-1/2 w-screen h-full pointer-events-none select-none overflow-hidden z-0"
     >
       {/* Dynamic Cursor Spotlight Proximity Glow */}
       {!reducedMotion && !isMobile && (
