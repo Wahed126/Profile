@@ -1,0 +1,94 @@
+---
+import { socialLinks } from "@/data/social-links";
+
+const education = [
+  { text: "> M.Sc. Computer Science" },
+  { text: "> University of Passau" },
+  {},
+  { text: "> Software Engineering" },
+  { text: "> Frontend Development" },
+  { text: "> UI/UX Design" },
+];
+
+const openToWork = [
+  { text: "> Working student" },
+  { text: "> Part time" },
+  { text: "> Freelance Full stack developer" },
+];
+---
+
+<section id="about" class="pt-0 pb-0 md:pt-2 md:pb-2">
+  <div class="mb-4">
+    <h2 class="section-heading mb-0">./About Me</h2>
+  </div>
+
+  <div class="grid grid-cols-1 lg:grid-cols-12 gap-4 md:gap-6 items-stretch">
+    <div
+      class="lg:col-span-8 bg-card text-card-foreground border border-border/80 rounded-[1.5rem] p-6 md:p-8 shadow-sm flex flex-col justify-between h-full"
+    >
+      <div
+        class="font-mono text-xs md:text-sm leading-relaxed max-w-2xl flex flex-col gap-4"
+      >
+        <p>
+          I'm Wahed, a Software Engineer and UI/UX Designer based in Germany. I
+          enjoy turning complex problems into simple, usable digital
+          experiences. My work sits at the intersection of software engineering,
+          frontend development, and product design.
+        </p>
+        <p>
+          Currently completing an M.Sc. in Computer Science at the University of
+          Passau and seeking full-time Full stack Web developer / Software
+          Developer roles in Germany.
+        </p>
+      </div>
+
+      <div class="mt-8 flex items-center justify-between">
+        <div class="flex items-center gap-4">
+          {
+            socialLinks.map((link) => (
+              <a
+                href={link.href}
+                class="text-foreground hover:text-accent transition-colors"
+                aria-label={link.name}
+                target="_blank"
+              >
+                <Fragment set:html={link.icon} />
+              </a>
+            ))
+          }
+        </div>
+        <a
+          href="#projects"
+          class="text-accent font-medium hover:underline text-xs md:text-sm font-mono"
+          >./Explore more</a
+        >
+      </div>
+    </div>
+
+    <div
+      class="lg:col-span-4 bg-card text-card-foreground border border-border/80 rounded-[1.5rem] p-6 md:p-8 shadow-sm flex flex-col justify-between h-full font-mono text-[10px] md:text-[11px]"
+    >
+      <div>
+        <h3
+          class="text-[10px] md:text-[11px] font-bold text-accent mb-3 uppercase tracking-wider"
+        >
+          ./Currently
+        </h3>
+        <ul class="flex flex-col gap-2 font-mono text-foreground/90">
+          {education.map((item) => <li>{item.text}</li>)}
+        </ul>
+      </div>
+
+      <div>
+        <h3
+          class="text-[10px] md:text-[11px] font-bold text-accent mb-3 uppercase tracking-wider"
+        >
+          ./open to work as:
+        </h3>
+        <ul class="flex flex-col gap-2 font-mono text-foreground/90">
+          {openToWork.map((item) => <li>{item.text}</li>)}
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>

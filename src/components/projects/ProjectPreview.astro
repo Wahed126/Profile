@@ -1,0 +1,33 @@
+---
+export interface Props {
+  id: string;
+  title: string;
+  image?: string;
+}
+
+const { id, title, image } = Astro.props;
+---
+
+<div class="flex flex-col justify-center gap-4 w-full mx-auto">
+  {image && (
+    <a href={`/projects/${id}`} class="block w-full">
+      <img 
+        src={image} 
+        alt={title} 
+        class="w-full h-auto rounded-xl shadow-sm group-hover:scale-[1.01] transition-transform duration-300"
+        loading="lazy"
+      />
+    </a>
+  )}
+  
+  <div class="flex items-center justify-between w-full pt-1">
+    <button class="text-accent hover:text-accent/80 transition-colors p-1" aria-label="Previous project">
+      <!-- Extended line left arrow to match image -->
+      <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12H3M9 18l-6-6 6-6"/></svg>
+    </button>
+    <button class="text-accent hover:text-accent/80 transition-colors p-1" aria-label="Next project">
+      <!-- Extended line right arrow to match image -->
+      <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h18M15 5l6 6-6 6"/></svg>
+    </button>
+  </div>
+</div>

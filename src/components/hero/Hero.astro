@@ -1,0 +1,61 @@
+---
+import ProfileCard from "./ProfileCard.astro";
+import TechStack from "../tech-stack/TechStack.astro";
+import { profile } from "@/data/profile";
+---
+
+<section id="home" class="pt-28 pb-0 md:pt-36 md:pb-2">
+  <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-start">
+    <!-- Left column: Hero text & Tech Stacks -->
+    <div class="lg:col-span-8 flex flex-col pt-4">
+      <div class="inline-flex items-center gap-3 mb-9 text-sm font-medium">
+        <span
+          class="relative flex h-3 w-3 items-center justify-center shrink-0"
+        >
+          <!-- Outer waving line circle -->
+          <span
+            class="wave-ring absolute inline-flex h-full w-full rounded-full border-2 border-emerald-500"
+          ></span>
+          <!-- Inner filled circle -->
+          <span
+            class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500 shadow-[0_0_6px_rgba(16,185,129,0.5)]"
+          ></span>
+        </span>
+        <span>Hi, I am {profile.name}, a {profile.role.toLowerCase()},</span>
+      </div>
+
+      <h1 class="text-h2 mb-9 max-w-2xl leading-tight">
+        {profile.headline}
+      </h1>
+
+      <p class="text-body text-muted-foreground max-w-xl">
+        {profile.description}
+      </p>
+
+      <!-- Tech Stack cards under description, next to ProfileCard -->
+      <TechStack />
+    </div>
+
+    <!-- Right column: Profile Card -->
+    <div class="lg:col-span-4 relative flex justify-center lg:justify-end">
+      <ProfileCard />
+    </div>
+  </div>
+</section>
+
+<style>
+  .wave-ring {
+    animation: wave-line 2s cubic-bezier(0, 0.2, 0.8, 1) infinite;
+  }
+
+  @keyframes wave-line {
+    0% {
+      transform: scale(0.8);
+      opacity: 0.9;
+    }
+    100% {
+      transform: scale(2.2);
+      opacity: 0;
+    }
+  }
+</style>

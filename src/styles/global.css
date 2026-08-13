@@ -1,0 +1,33 @@
+@import "tailwindcss";
+@import "./tokens.css";
+@import "./typography.css";
+
+@layer base {
+  *, ::before, ::after {
+    border-color: var(--color-border);
+  }
+  
+  body {
+    background-color: var(--color-background);
+    color: var(--color-foreground);
+    font-family: var(--font-mono);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  
+  html {
+    scroll-behavior: smooth;
+  }
+  
+  /* Focus outlines for accessibility */
+  :focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
+  }
+}
+
+@layer utilities {
+  .glass-effect {
+    @apply bg-background/70 backdrop-blur-sm;
+  }
+}

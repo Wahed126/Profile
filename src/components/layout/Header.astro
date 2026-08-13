@@ -1,0 +1,110 @@
+---
+import ThemeToggle from "@/components/ui/ThemeToggle";
+import { navigation } from "@/data/navigation";
+import { socialLinks } from "@/data/social-links";
+
+const pathname = Astro.url.pathname;
+---
+
+<header
+  id="main-header"
+  class="fixed left-1/2 -translate-x-1/2 z-50 w-max mx-auto"
+>
+  <div
+    class="glass-effect rounded-[1.25rem] border border-border/90 shadow-sm px-4 md:px-6 h-11 md:h-12 flex items-center gap-4 transition-all duration-300"
+  >
+    <!-- Left: Navigation Links -->
+    <nav class="hidden md:flex items-center h-full gap-4">
+      {
+        navigation.map((item) => {
+          const isActive =
+            item.href === pathname ||
+            (item.href !== "/" &&
+              !item.href.startsWith("#") &&
+              pathname.startsWith(item.href));
+
+          return (
+            <a
+              href={item.href}
+              class={`relative h-full flex items-center text-xs md:text-sm font-mono transition-colors group ${
+                isActive
+                  ? "text-foreground font-bold"
+                  : "text-muted-foreground hover:text-foreground font-normal"
+              }`}
+            >
+              {item.label}
+              <span
+                class={`absolute top-0 left-1/2 -translate-x-1/2 w-[1.5px] bg-foreground transition-all duration-300 origin-top ${
+                  isActive
+                    ? "h-3 opacity-100 scale-y-100"
+                    : "h-3 opacity-0 scale-y-0 group-hover:opacity-100 group-hover:scale-y-100"
+                }`}
+              />
+            </a>
+          );
+        })
+      }
+    </nav>
+
+    <!-- Mobile logo -->
+    <div class="md:hidden font-mono font-bold text-sm">W.</div>
+
+    <!-- Right: Separator + Icons + ThemeToggle -->
+    <div class="flex items-center h-full">
+      <!-- Vertical Divider Line -->
+      <div class="hidden md:block h-5 w-[1px] bg-border/80 mx-4"></div>
+
+      <div class="flex items-center gap-3.5">
+        {
+          socialLinks.map((link) => (
+            <a
+              href={link.href}
+              target="_blank"
+              rel="noopener noreferrer"
+              class="text-foreground/80 hover:text-foreground transition-colors"
+              aria-label={link.name}
+            >
+              <Fragment set:html={link.icon} />
+            </a>
+          ))
+        }
+        <ThemeToggle client:load />
+      </div>
+    </div>
+  </div>
+</header>
+
+<style>
+  #main-header {
+    top: 2.5rem;
+    transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  #main-header.scrolled {
+    top: 0.75rem;
+  }
+
+  @media (min-width: 768px) {
+    #main-header {
+      top: 3.25rem;
+    }
+    #main-header.scrolled {
+      top: 1rem;
+    }
+  }
+</style>
+
+<script>
+  const header = document.getElementById("main-header");
+  if (header) {
+    const handleScroll = () => {
+      if (window.scrollY > 20) {
+        header.classList.add("scrolled");
+      } else {
+        header.classList.remove("scrolled");
+      }
+    };
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    handleScroll();
+  }
+</script>

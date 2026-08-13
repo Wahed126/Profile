@@ -1,0 +1,17 @@
+---
+export interface Props {
+  index: number;
+  title: string;
+  description: string;
+}
+
+const { index, title, description } = Astro.props;
+const number = (index + 1).toString();
+---
+
+<h3 class="text-sm md:text-base font-bold mb-2.5 font-mono tracking-tight">
+  {number}. {title}:
+</h3>
+<p class="text-foreground/90 mb-4 font-mono text-[11px] md:text-xs leading-relaxed max-w-md">
+  {description}
+</p>

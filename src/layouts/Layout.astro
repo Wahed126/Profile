@@ -1,0 +1,55 @@
+---
+import '@/styles/global.css';
+import SEO from '@/components/seo/SEO.astro';
+import Header from '@/components/layout/Header.astro';
+import Footer from '@/components/layout/Footer.astro';
+
+// Fonts
+import '@fontsource-variable/inter';
+import '@fontsource-variable/jetbrains-mono';
+
+export interface Props {
+  title?: string;
+  description?: string;
+  image?: string;
+  type?: 'website' | 'article' | 'profile';
+  publishDate?: Date;
+}
+
+const props = Astro.props;
+---
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <SEO {...props} />
+    
+    <script is:inline>
+      const getThemePreference = () => {
+        if (typeof localStorage !== 'undefined' && localStorage.getItem('theme')) {
+          return localStorage.getItem('theme');
+        }
+        return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+      };
+      const isDark = getThemePreference() === 'dark';
+      document.documentElement.classList[isDark ? 'add' : 'remove']('dark');
+    
+      if (typeof localStorage !== 'undefined') {
+        const observer = new MutationObserver(() => {
+          const isDark = document.documentElement.classList.contains('dark');
+          localStorage.setItem('theme', isDark ? 'dark' : 'light');
+        });
+        observer.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
+      }
+    </script>
+  </head>
+  <body class="min-h-screen bg-background text-foreground selection:bg-accent selection:text-accent-foreground font-mono antialiased overflow-x-hidden">
+    <div class="mx-auto max-w-4xl px-4 md:px-8 flex flex-col min-h-screen">
+      <Header />
+      <main class="flex-grow pb-16">
+        <slot />
+      </main>
+      <Footer />
+    </div>
+  </body>
+</html>

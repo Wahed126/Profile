@@ -1,0 +1,8 @@
+---
+import { projects } from '@/data/projects';
+import ProjectSlider from './ProjectSlider';
+
+const featuredProjects = projects.filter(p => p.data.featured).slice(0, 3);
+---
+
+<ProjectSlider client:load projects={featuredProjects} />

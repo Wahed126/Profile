@@ -1,0 +1,43 @@
+---
+import { getCollection, render } from 'astro:content';
+import Layout from '@/layouts/Layout.astro';
+import type { CollectionEntry } from 'astro:content';
+
+export async function getStaticPaths() {
+  const projects = await getCollection('projects');
+  return projects.map(project => ({
+    params: { slug: project.id },
+    props: { project },
+  }));
+}
+
+export interface Props {
+  project: CollectionEntry<'projects'>;
+}
+
+const { project } = Astro.props;
+const { Content } = await render(project);
+
+const seoData = {
+  title: project.data.title,
+  description: project.data.description,
+  image: project.data.image,
+  type: 'article' as const,
+};
+---
+
+<Layout {...seoData}>
+  <article class="max-w-3xl mx-auto py-16 md:py-24 prose prose-invert prose-headings:font-sans prose-p:font-mono">
+    <div class="mb-12 border-b border-border pb-8">
+      <a href="/#projects" class="text-accent font-mono text-sm hover:underline mb-8 inline-block">
+        &lt;- Back to Projects
+      </a>
+      <h1 class="text-4xl md:text-5xl font-bold mb-4">{project.data.title}</h1>
+      <p class="text-xl text-muted-foreground font-mono">{project.data.description}</p>
+    </div>
+    
+    <div class="content font-mono leading-relaxed text-sm">
+      <Content />
+    </div>
+  </article>
+</Layout>

@@ -1,0 +1,27 @@
+---
+import { techStack } from "@/data/tech-stack";
+import TechStackCard from "./TechStackCard.astro";
+---
+
+<div id="tech-stack" class="w-full mt-10 md:mt-12">
+  <div class="mb-4">
+    <h2
+      class="text-lg md:text-xl font-bold font-mono text-foreground tracking-tight"
+    >
+      ./Tech Stacks
+    </h2>
+  </div>
+
+  <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 md:gap-3 items-start">
+    {
+      techStack.map((stack, index) => (
+        <TechStackCard
+          category={stack.category}
+          icon={stack.icon}
+          items={stack.items}
+          index={index}
+        />
+      ))
+    }
+  </div>
+</div>

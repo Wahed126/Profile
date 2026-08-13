@@ -1,0 +1,44 @@
+---
+export interface Props {
+  technologies: {
+    frontend?: string[];
+    backend?: string[];
+    database?: string[];
+    engineering?: string[];
+  };
+}
+
+const { technologies } = Astro.props;
+---
+
+{technologies && (
+  <div class="flex flex-col font-mono text-[10px] md:text-[11px] leading-snug">
+    <div class="text-accent font-medium mb-1.5"># Teck stacks:</div>
+    <div class="flex flex-col gap-1">
+      {technologies.frontend && (
+        <div class="flex gap-1.5">
+          <span class="text-accent min-w-[80px] shrink-0">./Front-end:</span>
+          <span class="text-foreground/80">{technologies.frontend.join(', ')}</span>
+        </div>
+      )}
+      {technologies.backend && (
+        <div class="flex gap-1.5">
+          <span class="text-accent min-w-[80px] shrink-0">./Back-end:</span>
+          <span class="text-foreground/80">{technologies.backend.join(', ')}</span>
+        </div>
+      )}
+      {technologies.database && (
+        <div class="flex gap-1.5">
+          <span class="text-accent min-w-[80px] shrink-0">./Database:</span>
+          <span class="text-foreground/80">{technologies.database.join(', ')}</span>
+        </div>
+      )}
+      {technologies.engineering && (
+        <div class="flex gap-1.5">
+          <span class="text-accent min-w-[80px] shrink-0">./Engineering:</span>
+          <span class="text-foreground/80">{technologies.engineering.join(', ')}</span>
+        </div>
+      )}
+    </div>
+  </div>
+)}
