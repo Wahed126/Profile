@@ -11,11 +11,11 @@ export default function HeroBackground() {
   const mouseY = useMotionValue(0);
 
   // Smooth springs for 95% calm, 5% response
-  const springX = useSpring(mouseX, { stiffness: 40, damping: 25 });
-  const springY = useSpring(mouseY, { stiffness: 40, damping: 25 });
+  const springX = useSpring(mouseX, { stiffness: 35, damping: 25 });
+  const springY = useSpring(mouseY, { stiffness: 35, damping: 25 });
 
-  const cursorX = useSpring(0, { stiffness: 60, damping: 30 });
-  const cursorY = useSpring(0, { stiffness: 60, damping: 30 });
+  const cursorX = useSpring(0, { stiffness: 50, damping: 25 });
+  const cursorY = useSpring(0, { stiffness: 50, damping: 25 });
 
   useEffect(() => {
     // Check reduced motion
@@ -48,9 +48,9 @@ export default function HeroBackground() {
     const centerX = rect.width / 2;
     const centerY = rect.height / 2;
 
-    // Very subtle normalized offset (-15px to 15px max)
-    mouseX.set(((x - centerX) / centerX) * 12);
-    mouseY.set(((y - centerY) / centerY) * 12);
+    // Subtle normalized offset (-14px to 14px max)
+    mouseX.set(((x - centerX) / centerX) * 14);
+    mouseY.set(((y - centerY) / centerY) * 14);
   };
 
   const handleMouseLeave = () => {
@@ -66,10 +66,14 @@ export default function HeroBackground() {
       aria-hidden="true"
       className="absolute top-0 left-1/2 -translate-x-1/2 w-screen h-full pointer-events-none select-none overflow-hidden z-0"
     >
+      {/* Ambient Organic Light Orbs in Negative Space */}
+      <div className="absolute top-[-10%] left-[-5%] w-[450px] h-[450px] rounded-full bg-accent/10 dark:bg-accent/15 blur-[100px] pointer-events-none" />
+      <div className="absolute bottom-[-10%] right-[-5%] w-[500px] h-[500px] rounded-full bg-emerald-500/10 dark:bg-emerald-500/15 blur-[120px] pointer-events-none" />
+
       {/* Dynamic Cursor Spotlight Proximity Glow */}
       {!reducedMotion && !isMobile && (
         <motion.div
-          className="absolute w-[400px] h-[400px] rounded-full pointer-events-none transition-opacity duration-500 opacity-20 dark:opacity-25 blur-3xl bg-accent/20"
+          className="absolute w-[350px] h-[350px] rounded-full pointer-events-none transition-opacity duration-500 opacity-20 dark:opacity-30 blur-3xl bg-accent/25"
           style={{
             x: cursorX,
             y: cursorY,
@@ -79,119 +83,70 @@ export default function HeroBackground() {
         />
       )}
 
-      {/* SVG Living Blueprint Design System Canvas */}
-      <svg className="w-full h-full absolute inset-0 opacity-40 dark:opacity-30">
+      {/* SVG Organic Vector Connections (NO GRAPH GRID LINES) */}
+      <svg className="w-full h-full absolute inset-0 opacity-40 dark:opacity-35">
         <defs>
-          {/* Subtle Grid Pattern */}
-          <pattern
-            id="hero-grid"
-            width="32"
-            height="32"
-            patternUnits="userSpaceOnUse"
-          >
-            <path
-              d="M 32 0 L 0 0 0 32"
-              fill="none"
-              stroke="currentColor"
-              className="text-neutral-300/40 dark:text-neutral-800/40"
-              strokeWidth="0.75"
-            />
-            <circle
-              cx="32"
-              cy="32"
-              r="1"
-              fill="currentColor"
-              className="text-neutral-400/30 dark:text-neutral-700/30"
-            />
-          </pattern>
-
-          {/* Linear Gradient for Connection Lines */}
-          <linearGradient id="line-glow" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stopColor="var(--accent)" stopOpacity="0.1" />
-            <stop offset="50%" stopColor="var(--accent)" stopOpacity="0.6" />
-            <stop offset="100%" stopColor="var(--accent)" stopOpacity="0.1" />
+          <linearGradient id="gradient-line-1" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stopColor="var(--accent)" stopOpacity="0.2" />
+            <stop offset="50%" stopColor="var(--accent)" stopOpacity="0.7" />
+            <stop offset="100%" stopColor="#10b981" stopOpacity="0.2" />
           </linearGradient>
         </defs>
 
-        {/* Background Grid */}
-        <rect width="100%" height="100%" fill="url(#hero-grid)" />
+        {/* Elegant Curved Vector Connections across outer screen boundaries */}
+        <g stroke="url(#gradient-line-1)" fill="none" strokeWidth="1.2" strokeDasharray="6 4">
+          <path d="M 50 120 Q 250 40 450 180 T 850 100" className="animate-pulse duration-1000" />
+          <path d="M 1000 350 Q 750 450 500 320 T 150 420" opacity="0.6" />
+        </g>
+
+        {/* Dynamic Nodes along the vector path */}
+        <circle cx="250" cy="80" r="4" className="fill-accent animate-ping" opacity="0.4" />
+        <circle cx="250" cy="80" r="2.5" className="fill-accent" />
+
+        <circle cx="750" cy="425" r="4" className="fill-emerald-500 animate-ping" opacity="0.4" />
+        <circle cx="750" cy="425" r="2.5" className="fill-emerald-500" />
       </svg>
 
-      {/* Abstract Design System Nodes & Annotations (Positioned in Negative Space) */}
+      {/* Living Interface Design & Code Floating Components */}
       <motion.div
         style={{ x: springX, y: springY }}
         className="w-full h-full relative"
       >
-        {/* TOP LEFT / CENTER NEGATIVE SPACE: Design System Spacing Guide & Code Fragment */}
-        <div className="absolute top-12 left-[12%] hidden lg:flex flex-col gap-1.5 opacity-60 dark:opacity-40">
-          <div className="flex items-center gap-2 font-mono text-[10px] text-muted-foreground/70">
-            <span className="w-2 h-2 rounded-full bg-accent/60 animate-pulse"></span>
-            <span>DesignSystem::Token</span>
-          </div>
-          <div className="border border-border/60 bg-card/30 rounded-md p-2 font-mono text-[10px] text-muted-foreground/80 flex flex-col gap-1 backdrop-blur-[1px]">
-            <div><span className="text-accent">spacing</span>: 16px;</div>
-            <div><span className="text-accent">radius</span>: 12px;</div>
-          </div>
-          {/* Spacing Measurement Indicator */}
-          <div className="flex items-center gap-1 font-mono text-[9px] text-muted-foreground/50 pl-1">
-            <span>|---</span>
-            <span className="text-accent/80 font-bold">16px</span>
-            <span>---|</span>
+        {/* TOP LEFT FAR NEGATIVE SPACE: Floating Design Token Chip */}
+        <div className="absolute top-14 left-[5%] hidden lg:flex flex-col gap-2">
+          <div className="flex items-center gap-2 font-mono text-[10px] text-muted-foreground/80 bg-card/40 border border-border/60 px-3 py-1.5 rounded-full backdrop-blur-md shadow-sm">
+            <span className="w-2 h-2 rounded-full bg-accent animate-pulse" />
+            <span>DesignToken::radius(12px)</span>
           </div>
         </div>
 
-        {/* TOP RIGHT NEGATIVE SPACE (Behind/Above Profile Card area): Component Node Diagram */}
-        <div className="absolute top-8 right-[8%] hidden md:flex flex-col items-end gap-2 opacity-60 dark:opacity-40">
-          <div className="flex items-center gap-1.5 font-mono text-[10px] text-muted-foreground/80 border border-border/50 bg-card/20 px-2 py-1 rounded">
-            <span className="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+        {/* TOP RIGHT FAR NEGATIVE SPACE: Floating Code Fragment Badge */}
+        <div className="absolute top-10 right-[5%] hidden md:flex flex-col items-end gap-2">
+          <div className="flex items-center gap-2 font-mono text-[10px] text-muted-foreground/80 bg-card/40 border border-border/60 px-3 py-1.5 rounded-xl backdrop-blur-md shadow-sm">
+            <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
             <span>&lt;Button variant="ghost" /&gt;</span>
           </div>
-
-          {/* Alignment & Anchor Guides */}
-          <svg width="180" height="70" className="overflow-visible opacity-50">
-            {/* Bezier Vector Curve linking Design to Code */}
-            <path
-              d="M 160 0 C 120 40, 60 20, 20 60"
-              fill="none"
-              stroke="currentColor"
-              className="text-accent/50"
-              strokeWidth="1"
-              strokeDasharray="4 3"
-            />
-            {/* Floating Control Handles */}
-            <circle cx="160" cy="0" r="3" className="fill-accent" />
-            <circle cx="20" cy="60" r="3" className="fill-emerald-500" />
-            <line x1="160" y1="0" x2="120" y2="40" stroke="currentColor" className="text-muted-foreground/40" strokeWidth="0.5" />
-          </svg>
-
-          <div className="font-mono text-[9px] text-muted-foreground/60 tracking-wider uppercase">
-            flex-direction: row;
+          <div className="font-mono text-[9px] text-muted-foreground/60 tracking-wider">
+            display: flex; gap: 16px;
           </div>
         </div>
 
-        {/* BOTTOM LEFT / MID NEGATIVE SPACE: UI Component Outline Frame */}
-        <div className="absolute bottom-16 left-[5%] hidden lg:block opacity-50 dark:opacity-35">
-          <div className="border border-dashed border-border/70 rounded-xl p-3 w-44 font-mono text-[10px] text-muted-foreground/70 flex flex-col gap-2 relative">
-            {/* Corner Alignment Crosses */}
-            <span className="absolute -top-1.5 -left-1.5 text-[10px] text-accent/60 font-bold">+</span>
-            <span className="absolute -top-1.5 -right-1.5 text-[10px] text-accent/60 font-bold">+</span>
-            <span className="absolute -bottom-1.5 -left-1.5 text-[10px] text-accent/60 font-bold">+</span>
-            <span className="absolute -bottom-1.5 -right-1.5 text-[10px] text-accent/60 font-bold">+</span>
-
-            <div className="flex items-center justify-between text-[9px] border-b border-border/40 pb-1">
-              <span>UI::Card</span>
-              <span className="text-accent">8px</span>
+        {/* BOTTOM LEFT FAR NEGATIVE SPACE: UI Component Frame Outline */}
+        <div className="absolute bottom-20 left-[4%] hidden lg:block">
+          <div className="border border-border/60 bg-card/30 rounded-xl p-3.5 w-48 font-mono text-[10px] text-muted-foreground/80 flex flex-col gap-2 relative backdrop-blur-md shadow-sm">
+            <div className="flex items-center justify-between text-[9px] border-b border-border/40 pb-1.5">
+              <span className="font-bold text-foreground/80">UI::Card</span>
+              <span className="text-accent font-semibold">16px</span>
             </div>
-            <div className="h-2 w-2/3 bg-muted-foreground/20 rounded-sm"></div>
-            <div className="h-1.5 w-1/2 bg-muted-foreground/15 rounded-sm"></div>
+            <div className="h-2 w-3/4 bg-muted-foreground/20 rounded" />
+            <div className="h-1.5 w-1/2 bg-muted-foreground/15 rounded" />
           </div>
         </div>
 
-        {/* MID RIGHT NEGATIVE SPACE: Interface Node Connection Graph */}
-        <div className="absolute bottom-12 right-[12%] hidden md:flex flex-col gap-1.5 opacity-55 dark:opacity-35">
-          <div className="flex items-center gap-2 font-mono text-[9px] text-muted-foreground/70 border border-border/40 bg-card/20 px-2.5 py-1 rounded-full">
-            <span className="w-1.5 h-1.5 rounded-full bg-accent"></span>
-            <span>Design</span>
+        {/* BOTTOM RIGHT FAR NEGATIVE SPACE: Design to Code Node Relationship */}
+        <div className="absolute bottom-16 right-[6%] hidden md:flex flex-col gap-2">
+          <div className="flex items-center gap-2 font-mono text-[10px] text-muted-foreground/80 bg-card/40 border border-border/60 px-3.5 py-1.5 rounded-full backdrop-blur-md shadow-sm">
+            <span className="text-accent font-semibold">Design</span>
             <span className="text-muted-foreground/40">→</span>
             <span>Component</span>
             <span className="text-muted-foreground/40">→</span>
