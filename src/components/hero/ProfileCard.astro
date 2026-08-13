@@ -14,13 +14,13 @@ const currentFocus = [
 ];
 ---
 
-<div class="bg-card text-card-foreground rounded-[1.75rem] p-2 shadow-card border w-full max-w-[260px] flex flex-col">
+<div class="group bg-card text-card-foreground rounded-[1.75rem] p-2 shadow-card border border-border/80 hover:border-accent/40 w-full max-w-[260px] flex flex-col transition-all duration-500 ease-out hover:-translate-y-2 hover:shadow-xl hover:shadow-accent/10">
   <!-- Profile Image container -->
   <div class="relative w-full aspect-[4/5] rounded-[1.25rem] overflow-hidden bg-muted mb-3">
     <img 
       src="/images/profile/wahed.png" 
       alt="Wahed" 
-      class="object-cover w-full h-full"
+      class="object-cover w-full h-full group-hover:scale-[1.03] transition-transform duration-500"
       loading="eager"
     />
   </div>

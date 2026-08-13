@@ -113,16 +113,16 @@ export default function HeroBackground() {
         className="w-full h-full relative"
       >
         {/* TOP LEFT FAR NEGATIVE SPACE: Floating Design Token Chip */}
-        <div className="absolute top-14 left-[5%] hidden lg:flex flex-col gap-2">
-          <div className="flex items-center gap-2 font-mono text-[10px] text-muted-foreground/80 bg-card/40 border border-border/60 px-3 py-1.5 rounded-full backdrop-blur-md shadow-sm">
+        <div className="absolute top-14 left-[5%] hidden lg:flex flex-col gap-2 pointer-events-auto">
+          <div className="flex items-center gap-2 font-mono text-[10px] text-muted-foreground/80 bg-card/40 border border-border/60 hover:border-accent/60 hover:text-foreground px-3 py-1.5 rounded-full backdrop-blur-md shadow-sm transition-all duration-300 hover:scale-105 cursor-pointer">
             <span className="w-2 h-2 rounded-full bg-accent animate-pulse" />
             <span>DesignToken::radius(12px)</span>
           </div>
         </div>
 
         {/* TOP RIGHT FAR NEGATIVE SPACE: Floating Code Fragment Badge */}
-        <div className="absolute top-10 right-[5%] hidden md:flex flex-col items-end gap-2">
-          <div className="flex items-center gap-2 font-mono text-[10px] text-muted-foreground/80 bg-card/40 border border-border/60 px-3 py-1.5 rounded-xl backdrop-blur-md shadow-sm">
+        <div className="absolute top-10 right-[5%] hidden md:flex flex-col items-end gap-2 pointer-events-auto">
+          <div className="flex items-center gap-2 font-mono text-[10px] text-muted-foreground/80 bg-card/40 border border-border/60 hover:border-emerald-500/60 hover:text-foreground px-3 py-1.5 rounded-xl backdrop-blur-md shadow-sm transition-all duration-300 hover:scale-105 cursor-pointer">
             <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
             <span>&lt;Button variant="ghost" /&gt;</span>
           </div>
