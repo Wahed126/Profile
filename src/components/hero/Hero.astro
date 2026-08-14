@@ -18,18 +18,18 @@ import { profile } from "@/data/profile";
         >
           <!-- Outer waving line circle -->
           <span
-            class="wave-ring absolute inline-flex h-full w-full rounded-full border-2 border-emerald-500"
+            class="wave-ring absolute inline-flex h-full w-full rounded-full border-2 border-accent"
           ></span>
           <!-- Inner filled circle -->
           <span
-            class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500 shadow-[0_0_6px_rgba(16,185,129,0.5)]"
+            class="relative inline-flex rounded-full h-2 w-2 bg-accent shadow-[0_0_6px_rgba(8,145,178,0.5)]"
           ></span>
         </span>
         <span>Hi, I am {profile.name}, a {profile.role.toLowerCase()},</span>
       </div>
 
       <h1 class="text-h2 mb-9 max-w-2xl leading-tight">
-        {profile.headline}
+        I Design <span class="text-accent">Digital Experiences</span> & Build <span class="text-accent">Software</span>.
       </h1>
 
       <p class="text-body text-muted-foreground max-w-xl">
