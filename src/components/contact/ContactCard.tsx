@@ -18,7 +18,13 @@ export default function ContactCard() {
 
   return (
     <section id="contact" className="w-full h-full">
-      <div className="bg-card text-card-foreground border border-border/80 rounded-[1.5rem] p-6 md:p-8 shadow-sm h-full flex flex-col justify-between relative overflow-hidden transition-all duration-300">
+      <motion.div
+        className="bg-card text-card-foreground border border-border/80 rounded-[1.5rem] p-6 md:p-8 shadow-sm h-full flex flex-col justify-between relative overflow-hidden transition-all duration-300"
+        initial={{ opacity: 0, x: 36, scale: 0.96 }}
+        whileInView={{ opacity: 1, x: 0, scale: 1 }}
+        viewport={{ once: false, amount: 0.05 }}
+        transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1], delay: 0 }}
+      >
         <AnimatePresence mode="wait">
           {!showForm ? (
             /* Call-to-Action View */
@@ -174,7 +180,7 @@ export default function ContactCard() {
             </motion.div>
           )}
         </AnimatePresence>
-      </div>
+      </motion.div>
     </section>
   );
 }

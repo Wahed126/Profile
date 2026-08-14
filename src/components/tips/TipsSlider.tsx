@@ -101,17 +101,29 @@ export default function TipsSlider({ tips = tipsData }: TipsSliderProps) {
 
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 md:gap-8 items-center">
         {/* Left Column: Illustration */}
-        <div className="lg:col-span-6 flex justify-start items-center">
+        <motion.div
+          className="lg:col-span-6 flex justify-start items-center"
+          initial={{ opacity: 0, x: -36, scale: 0.95 }}
+          whileInView={{ opacity: 1, x: 0, scale: 1 }}
+          viewport={{ once: false, amount: 0.15 }}
+          transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+        >
           <img
             src="/images/illustrations/octopus.png"
             alt="Tip illustration"
             className="w-full max-w-[320px] md:max-w-[360px] h-auto object-contain opacity-90 mix-blend-multiply dark:mix-blend-normal dark:invert"
             loading="lazy"
           />
-        </div>
+        </motion.div>
 
         {/* Right Column: Clean Pitch-Black Tip Card with Interactive Spotlight Octopus Reveal */}
-        <div className="lg:col-span-6 flex justify-end w-full">
+        <motion.div
+          className="lg:col-span-6 flex justify-end w-full"
+          initial={{ opacity: 0, x: 36, scale: 0.95 }}
+          whileInView={{ opacity: 1, x: 0, scale: 1 }}
+          viewport={{ once: false, amount: 0.15 }}
+          transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1], delay: 0.1 }}
+        >
           <div
             ref={cardRef}
             onMouseMove={handleMouseMove}
@@ -173,7 +185,7 @@ export default function TipsSlider({ tips = tipsData }: TipsSliderProps) {
               </motion.div>
             </AnimatePresence>
           </div>
-        </div>
+        </motion.div>
       </div>
     </section>
   );

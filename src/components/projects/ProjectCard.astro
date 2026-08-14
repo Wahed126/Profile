@@ -13,7 +13,10 @@ const { project, index } = Astro.props;
 const { data } = project;
 ---
 
-<div class="bg-card text-card-foreground border border-border/80 rounded-[1.5rem] p-6 md:p-8 shadow-sm w-full grid grid-cols-1 lg:grid-cols-12 gap-6 md:gap-8 items-center relative overflow-hidden group">
+<div
+  class="reveal-card reveal-zoom-in bg-card text-card-foreground border border-border/80 rounded-[1.5rem] p-6 md:p-8 shadow-sm w-full grid grid-cols-1 lg:grid-cols-12 gap-6 md:gap-8 items-center relative overflow-hidden group"
+  data-scroll-delay={index * 120}
+>
   
   <div class="lg:col-span-6 flex flex-col justify-center">
     <ProjectMeta 

@@ -30,4 +30,57 @@
   .glass-effect {
     @apply bg-background/70 backdrop-blur-sm;
   }
+
+  /* GPU-Accelerated Scroll Entrance Reveal System */
+  .reveal-card {
+    opacity: 0;
+    will-change: transform, opacity, filter;
+    transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1),
+                transform 0.85s cubic-bezier(0.16, 1, 0.3, 1),
+                filter 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  /* Default fade-up entrance */
+  .reveal-fade-up {
+    transform: translate3d(0, 36px, 0) scale(0.96);
+    filter: blur(4px);
+  }
+
+  /* 3D tilt slide left entrance */
+  .reveal-slide-left {
+    transform: translate3d(42px, 20px, 0) rotateX(4deg) scale(0.96);
+    filter: blur(4px);
+  }
+
+  /* 3D tilt slide right entrance */
+  .reveal-slide-right {
+    transform: translate3d(-42px, 20px, 0) rotateX(4deg) scale(0.96);
+    filter: blur(4px);
+  }
+
+  /* Zoom in scale entrance */
+  .reveal-zoom-in {
+    transform: translate3d(0, 24px, 0) scale(0.92);
+    filter: blur(6px);
+  }
+
+  /* Active revealed state with dynamic mouse scroll velocity reaction */
+  .reveal-card.is-revealed {
+    opacity: 1;
+    transform: translate3d(0, calc(var(--scroll-velocity, 0px) * -1), 0) rotateX(0deg) scale(1);
+    filter: blur(0px);
+    transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1),
+                transform 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+                filter 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+}
+
+/* Reduced motion preference override */
+@media (prefers-reduced-motion: reduce) {
+  .reveal-card {
+    opacity: 1 !important;
+    transform: none !important;
+    filter: none !important;
+    transition: none !important;
+  }
 }

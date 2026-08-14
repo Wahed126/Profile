@@ -41,6 +41,66 @@ const props = Astro.props;
         });
         observer.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
       }
+
+      // Interactive Mouse Scroll Reveal & Velocity Physics System
+      const initScrollReveal = () => {
+        if (typeof window === 'undefined') return;
+        if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+          document.querySelectorAll('.reveal-card').forEach((el) => el.classList.add('is-revealed'));
+          return;
+        }
+
+        // Bi-Directional Observer for continuous mouse scroll interaction
+        const observer = new IntersectionObserver(
+          (entries) => {
+            entries.forEach((entry) => {
+              const delay = entry.target.getAttribute('data-scroll-delay') || '0';
+              if (entry.isIntersecting) {
+                setTimeout(() => {
+                  entry.target.classList.add('is-revealed');
+                }, parseInt(delay, 10));
+              } else {
+                // Gracefully reset on scroll out so scrolling back up/down re-animates interactively
+                entry.target.classList.remove('is-revealed');
+              }
+            });
+          },
+          {
+            threshold: 0.12,
+            rootMargin: '0px 0px -40px 0px',
+          }
+        );
+
+        document.querySelectorAll('.reveal-card').forEach((el) => observer.observe(el));
+
+        // Scroll inertia physics listener
+        let lastScrollY = window.scrollY;
+        let scrollTimeout;
+
+        window.addEventListener(
+          'scroll',
+          () => {
+            const currentScrollY = window.scrollY;
+            const delta = currentScrollY - lastScrollY;
+            const velocity = Math.min(Math.max(delta * 0.12, -8), 8);
+            lastScrollY = currentScrollY;
+
+            document.documentElement.style.setProperty('--scroll-velocity', `${velocity}px`);
+
+            clearTimeout(scrollTimeout);
+            scrollTimeout = setTimeout(() => {
+              document.documentElement.style.setProperty('--scroll-velocity', '0px');
+            }, 100);
+          },
+          { passive: true }
+        );
+      };
+
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initScrollReveal);
+      } else {
+        initScrollReveal();
+      }
     </script>
   </head>
   <body class="min-h-screen bg-background text-foreground selection:bg-accent selection:text-accent-foreground font-mono antialiased overflow-x-hidden">

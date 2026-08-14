@@ -74,7 +74,14 @@ export default function ProjectSlider({ projects }: ProjectSliderProps) {
   };
 
   return (
-    <section id="projects" className="pt-0 pb-0 md:pt-2 md:pb-2">
+    <motion.section
+      id="projects"
+      className="pt-0 pb-0 md:pt-2 md:pb-2"
+      initial={{ opacity: 0, y: 32, scale: 0.98 }}
+      whileInView={{ opacity: 1, y: 0, scale: 1 }}
+      viewport={{ once: false, amount: 0.15 }}
+      transition={{ duration: 0.75, ease: [0.16, 1, 0.3, 1] }}
+    >
       {/* Section Header with Working Controls */}
       <div className="flex flex-col md:flex-row md:items-center justify-between mb-4 gap-4">
         <h2 className="section-heading mb-0 text-2xl font-bold font-mono tracking-tight text-foreground">
@@ -189,6 +196,6 @@ export default function ProjectSlider({ projects }: ProjectSliderProps) {
           </div>
         </div>
       </div>
-    </section>
+    </motion.section>
   );
 }

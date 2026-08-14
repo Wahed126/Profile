@@ -4,18 +4,21 @@ import { motion, useSpring, useMotionValue } from 'framer-motion';
 export default function HeroBackground() {
   const [reducedMotion, setReducedMotion] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
-  const [isHoveringHero, setIsHoveringHero] = useState(false);
+  const [isHovering, setIsHovering] = useState(false);
+  const [activeNode, setActiveNode] = useState<string | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
 
-  // Motion values for smooth cursor parallax
+  // Smooth springs for hardware-accelerated cursor tracking
+  const rawCursorX = useMotionValue(0);
+  const rawCursorY = useMotionValue(0);
   const mouseX = useMotionValue(0);
   const mouseY = useMotionValue(0);
 
-  const springX = useSpring(mouseX, { stiffness: 45, damping: 25 });
-  const springY = useSpring(mouseY, { stiffness: 45, damping: 25 });
-
-  const cursorX = useSpring(0, { stiffness: 60, damping: 30 });
-  const cursorY = useSpring(0, { stiffness: 60, damping: 30 });
+  const springConfig = { stiffness: 280, damping: 26 };
+  const smoothCursorX = useSpring(rawCursorX, springConfig);
+  const smoothCursorY = useSpring(rawCursorY, springConfig);
+  const springMouseX = useSpring(mouseX, { stiffness: 120, damping: 20 });
+  const springMouseY = useSpring(mouseY, { stiffness: 120, damping: 20 });
 
   useEffect(() => {
     const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
@@ -35,39 +38,76 @@ export default function HeroBackground() {
 
   useEffect(() => {
     const heroElement = document.getElementById('home');
-    if (!heroElement) return;
+    if (!heroElement || !containerRef.current) return;
 
     const handleHeroMouseMove = (e: MouseEvent) => {
-      if (reducedMotion || isMobile) return;
-      const rect = heroElement.getBoundingClientRect();
+      if (reducedMotion || isMobile || !containerRef.current) return;
 
-      if (
-        e.clientY >= rect.top - 60 &&
-        e.clientY <= rect.bottom + 60 &&
-        e.clientX >= rect.left &&
-        e.clientX <= rect.right
-      ) {
-        setIsHoveringHero(true);
-        const x = e.clientX - rect.left;
-        const y = e.clientY - rect.top;
+      const heroRect = heroElement.getBoundingClientRect();
+      const containerRect = containerRef.current.getBoundingClientRect();
 
-        cursorX.set(x);
-        cursorY.set(y);
+      // Active across the entire screen width within the hero section height
+      const inHeroArea = e.clientY >= heroRect.top - 80 && e.clientY <= heroRect.bottom + 80;
 
-        const centerX = rect.width / 2;
-        const centerY = rect.height / 2;
+      if (inHeroArea) {
+        setIsHovering(true);
 
-        mouseX.set(((x - centerX) / centerX) * 16);
-        mouseY.set(((y - centerY) / centerY) * 16);
+        // Exact 1:1 mouse coordinates across full screen width
+        const x = e.clientX - containerRect.left;
+        const y = e.clientY - containerRect.top;
+
+        rawCursorX.set(x);
+        rawCursorY.set(y);
+
+        const screenCenterX = window.innerWidth / 2;
+        const heroCenterY = heroRect.height / 2;
+        const heroMouseY = e.clientY - heroRect.top;
+
+        mouseX.set(((e.clientX - screenCenterX) / screenCenterX) * 8);
+        mouseY.set(((heroMouseY - heroCenterY) / heroCenterY) * 8);
+
+        // Responsive node positions for software engineering concepts
+        const w = containerRect.width;
+        const nodePositions = [
+          { id: 'build', x: w * 0.08, y: 55 },
+          { id: 'state', x: w * 0.04, y: 290 },
+          { id: 'component', x: w * 0.88, y: 75 },
+          { id: 'system', x: w * 0.94, y: 230 },
+        ];
+
+        let closestId: string | null = null;
+        let minDistance = 200;
+
+        nodePositions.forEach((node) => {
+          const dist = Math.hypot(x - node.x, y - node.y);
+          if (dist < minDistance) {
+            minDistance = dist;
+            closestId = node.id;
+          }
+        });
+
+        setActiveNode(closestId);
       } else {
-        setIsHoveringHero(false);
+        setIsHovering(false);
+        setActiveNode(null);
         mouseX.set(0);
         mouseY.set(0);
       }
     };
 
+    const handleMouseLeave = () => {
+      setIsHovering(false);
+      setActiveNode(null);
+      mouseX.set(0);
+      mouseY.set(0);
+    };
+
     window.addEventListener('mousemove', handleHeroMouseMove);
-    return () => window.removeEventListener('mousemove', handleHeroMouseMove);
+    document.addEventListener('mouseleave', handleMouseLeave);
+    return () => {
+      window.removeEventListener('mousemove', handleHeroMouseMove);
+      document.removeEventListener('mouseleave', handleMouseLeave);
+    };
   }, [reducedMotion, isMobile]);
 
   return (
@@ -76,158 +116,108 @@ export default function HeroBackground() {
       aria-hidden="true"
       className="absolute top-0 left-1/2 -translate-x-1/2 w-screen h-full pointer-events-none select-none overflow-hidden z-0"
     >
-      {/* Dynamic Cursor Spotlight Proximity Lens */}
+      {/* 1. Subtle Radial Glow spotlight following cursor */}
       {!reducedMotion && !isMobile && (
         <motion.div
-          className="absolute w-[450px] h-[450px] rounded-full pointer-events-none transition-opacity duration-700 blur-3xl bg-cyan-500/15 dark:bg-cyan-500/25"
+          className="absolute w-[360px] h-[360px] rounded-full pointer-events-none transition-opacity duration-500 blur-3xl bg-emerald-500/10 dark:bg-emerald-400/15"
           style={{
-            x: cursorX,
-            y: cursorY,
+            x: smoothCursorX,
+            y: smoothCursorY,
             translateX: '-50%',
             translateY: '-50%',
-            opacity: isHoveringHero ? 1 : 0,
+            opacity: isHovering ? 1 : 0,
           }}
         />
       )}
 
-      {/* SVG Blueprint Vectors & Connecting Nodes */}
-      <svg className="w-full h-full absolute inset-0 opacity-30 dark:opacity-20">
+      {/* 2. Precision SVG Vector Blueprint Network */}
+      <svg className="w-full h-full absolute inset-0">
         <defs>
           <pattern
-            id="dot-grid"
-            width="24"
-            height="24"
+            id="hero-dot-grid"
+            width="32"
+            height="32"
             patternUnits="userSpaceOnUse"
           >
-            <circle cx="12" cy="12" r="0.8" className="fill-neutral-400/30 dark:fill-neutral-700/40" />
+            <circle
+              cx="16"
+              cy="16"
+              r="0.75"
+              className="fill-neutral-400/30 dark:fill-neutral-600/30"
+            />
           </pattern>
         </defs>
 
-        {/* Fine Blueprint Dot Grid */}
-        <rect width="100%" height="100%" fill="url(#dot-grid)" />
+        {/* Minimal dot grid background */}
+        <rect width="100%" height="100%" fill="url(#hero-dot-grid)" opacity="0.85" />
 
-        {/* Vector Curved Paths linking Outer Margins */}
-        <g stroke="currentColor" fill="none" strokeWidth="1" className="text-cyan-500/30 dark:text-cyan-400/20">
-          <path d="M 50 120 Q 250 40 450 180" strokeDasharray="4 3" />
-          <path d="M 1200 120 Q 1300 200 1350 350 T 1280 600" opacity="0.6" strokeDasharray="3 3" />
-          <path d="M 100 180 Q 180 250 220 380" opacity="0.4" strokeDasharray="2 2" />
-        </g>
-
-        {/* Cyan Glowing Nodes along Outer Edge Paths */}
-        <g className="fill-cyan-500/80 dark:fill-cyan-400/80">
-          <circle cx="1200" cy="120" r="3" />
-          <circle cx="1280" cy="280" r="3" />
-          <circle cx="1220" cy="480" r="3" />
+        {/* Subtle dashed vector blueprint lines in negative space */}
+        <g stroke="currentColor" fill="none" strokeWidth="0.75" className="text-neutral-400/25 dark:text-neutral-600/25">
+          <path d="M 4% 55 Q 8% 180 4% 290" strokeDasharray="3 3" />
+          <path d="M 88% 75 Q 92% 150 94% 230" strokeDasharray="3 3" />
+          <path d="M 4% 290 Q 20% 320 35% 340" strokeDasharray="4 4" opacity="0.4" />
+          <path d="M 94% 230 Q 80% 280 65% 320" strokeDasharray="4 4" opacity="0.4" />
         </g>
       </svg>
 
-      {/* Interactive Blueprint Elements & Cards Positioned Strictly in Outer Negative Space */}
+      {/* 3. Software Engineering Blueprint Badges positioned strictly in outer negative space */}
       <motion.div
-        style={{ x: springX, y: springY }}
+        style={{ x: springMouseX, y: springMouseY }}
         className="w-full h-full relative"
       >
-        {/* ================= LEFT MARGIN ELEMENTS ================= */}
+        {/* ================= LEFT NEGATIVE SPACE MARGIN ================= */}
 
-        {/* 1. TOP LEFT: Spacing Scale Card & Typography Card */}
-        <div className="absolute top-12 left-[1.5%] hidden xl:flex gap-3 pointer-events-auto">
-          {/* Spacing Card */}
-          <div className="border border-border/70 bg-card/50 rounded-xl p-2.5 font-mono text-[9px] text-muted-foreground flex flex-col gap-1 backdrop-blur-md shadow-sm hover:border-cyan-500/50 hover:text-foreground transition-all duration-300">
-            <div className="text-cyan-500 font-bold text-[8px] uppercase tracking-wider mb-0.5">Spacing</div>
-            <div>4</div>
-            <div>8</div>
-            <div>16</div>
-            <div>24</div>
-            <div>32</div>
-            <div>48</div>
-            <div>64</div>
-          </div>
-
-          {/* Typography Card */}
-          <div className="border border-border/70 bg-card/50 rounded-xl p-3 font-mono text-[9px] text-muted-foreground flex flex-col gap-1 backdrop-blur-md shadow-sm h-fit hover:border-cyan-500/50 hover:text-foreground transition-all duration-300">
-            <div className="text-xl font-sans font-bold text-foreground mb-1">Aa</div>
-            <div className="text-[10px] text-foreground font-semibold">Inter</div>
-            <div>16 / 24</div>
-            <div>600</div>
-          </div>
+        {/* TOP-LEFT NODE: CI/CD & Build Status */}
+        <div
+          className={`absolute top-[55px] left-[8.5%] hidden xl:flex items-center gap-2 font-mono text-[10px] border px-2.5 py-1 rounded-full transition-all duration-300 backdrop-blur-sm ${
+            activeNode === 'build'
+              ? 'border-emerald-500/60 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 shadow-sm shadow-emerald-500/10 scale-105'
+              : 'border-border/60 bg-card/40 text-muted-foreground/80'
+          }`}
+        >
+          <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+          <span>{activeNode === 'build' ? 'build: passing ✓' : 'main • v2.4'}</span>
         </div>
 
-        {/* 2. MID LEFT: Wireframe Component Box & Badges */}
-        <div className="absolute top-[38%] left-[1.5%] hidden xl:flex flex-col items-center gap-2 pointer-events-auto">
-          <div className="bg-cyan-500/10 border border-cyan-500/30 text-cyan-600 dark:text-cyan-400 font-mono text-[9px] px-2 py-0.5 rounded-full font-bold">
-            24px
-          </div>
-
-          {/* Wireframe UI Box */}
-          <div className="border border-dashed border-border/80 bg-card/30 rounded-xl p-3 w-36 flex flex-col gap-2 relative backdrop-blur-md shadow-sm">
-            <span className="absolute -top-1 -left-1 w-2 h-2 border border-cyan-500 bg-background" />
-            <span className="absolute -top-1 -right-1 w-2 h-2 border border-cyan-500 bg-background" />
-            <span className="absolute -bottom-1 -left-1 w-2 h-2 border border-cyan-500 bg-background" />
-            <span className="absolute -bottom-1 -right-1 w-2 h-2 border border-cyan-500 bg-background" />
-
-            <div className="h-2 w-3/4 bg-muted-foreground/20 rounded" />
-            <div className="h-3.5 w-full bg-cyan-500/20 border border-cyan-500/40 rounded flex items-center px-2">
-              <div className="h-1.5 w-1/3 bg-cyan-500/60 rounded" />
-            </div>
-            <div className="h-2 w-1/2 bg-muted-foreground/20 rounded" />
-          </div>
-
-          <div className="border border-border/60 bg-card/40 text-muted-foreground font-mono text-[9px] px-2 py-0.5 rounded-md">
-            radius: 12px
-          </div>
+        {/* MID-LEFT NODE: Architecture & State Flow */}
+        <div
+          className={`absolute top-[290px] left-[4%] hidden xl:flex items-center gap-1.5 font-mono text-[10px] border px-2.5 py-1 rounded-md transition-all duration-300 backdrop-blur-sm ${
+            activeNode === 'state'
+              ? 'border-emerald-500/60 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 shadow-sm shadow-emerald-500/10 scale-105'
+              : 'border-border/60 bg-card/40 text-muted-foreground/75'
+          }`}
+        >
+          <span className="text-[9px] text-emerald-500/80 font-bold">state</span>
+          <span>→</span>
+          <span>view</span>
         </div>
 
-        {/* 3. BOTTOM LEFT: CSS Code Block Card */}
-        <div className="absolute bottom-6 left-[1.5%] hidden xl:block pointer-events-auto">
-          <div className="border border-border/70 bg-card/50 rounded-xl p-2.5 font-mono text-[8.5px] text-muted-foreground backdrop-blur-md shadow-sm w-44 flex flex-col gap-0.5 hover:border-cyan-500/50 transition-all duration-300">
-            <div className="flex gap-2"><span className="text-muted-foreground/40">01</span><span><span className="text-cyan-500">.card</span> &#123;</span></div>
-            <div className="flex gap-2"><span className="text-muted-foreground/40">02</span><span className="pl-2">display: flex;</span></div>
-            <div className="flex gap-2"><span className="text-muted-foreground/40">03</span><span className="pl-2">gap: <span className="text-cyan-500">16px</span>;</span></div>
-            <div className="flex gap-2"><span className="text-muted-foreground/40">04</span><span className="pl-2">padding: <span className="text-cyan-500">16px</span>;</span></div>
-            <div className="flex gap-2"><span className="text-muted-foreground/40">05</span><span>&#125;</span></div>
-          </div>
+        {/* ================= RIGHT NEGATIVE SPACE MARGIN ================= */}
+
+        {/* TOP-RIGHT NODE: Async Component & Bundle Size */}
+        <div
+          className={`absolute top-[75px] right-[12.5%] hidden xl:flex items-center gap-2 font-mono text-[10px] border px-2.5 py-1 rounded-lg transition-all duration-300 backdrop-blur-sm ${
+            activeNode === 'component'
+              ? 'border-emerald-500/60 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 shadow-sm shadow-emerald-500/10 scale-105'
+              : 'border-border/60 bg-card/40 text-muted-foreground/80'
+          }`}
+        >
+          <span>{activeNode === 'component' ? 'bundle: 4.2kB' : '<AsyncComponent />'}</span>
         </div>
 
-
-        {/* ================= RIGHT MARGIN ELEMENTS (Clear of Hero Text) ================= */}
-
-        {/* 4. TOP RIGHT OUTER MARGIN: UI -> Code Pill Badge & Button Snippet Card */}
-        <div className="absolute top-8 right-[1.5%] hidden xl:flex flex-col items-end gap-2 pointer-events-auto">
-          <div className="bg-cyan-500/10 border border-cyan-500/30 text-cyan-600 dark:text-cyan-400 font-mono text-[9px] px-2.5 py-1 rounded-full font-bold shadow-sm backdrop-blur-md">
-            UI → Code
-          </div>
-
-          <div className="border border-border/70 bg-card/60 rounded-xl p-2.5 font-mono text-[8.5px] text-muted-foreground backdrop-blur-md shadow-sm w-40 flex flex-col gap-0.5 hover:border-cyan-500/50 transition-all duration-300">
-            <div className="flex gap-2"><span className="text-muted-foreground/40">01</span><span>&lt;<span className="text-cyan-500 font-bold">Button</span></span></div>
-            <div className="flex gap-2"><span className="text-muted-foreground/40">02</span><span className="pl-2">type="primary"</span></div>
-            <div className="flex gap-2"><span className="text-muted-foreground/40">03</span><span className="pl-2">size="md"</span></div>
-            <div className="flex gap-2"><span className="text-muted-foreground/40">04</span><span className="pl-2 text-foreground font-bold">Build</span></div>
-            <div className="flex gap-2"><span className="text-muted-foreground/40">05</span><span>&lt;/<span className="text-cyan-500 font-bold">Button</span>&gt;</span></div>
-          </div>
-        </div>
-
-        {/* 5. MID RIGHT MARGIN: Dev Mode & Commit Badges */}
-        <div className="absolute top-[45%] right-[1.5%] hidden xl:flex flex-col items-end gap-2 pointer-events-auto">
-          <div className="border border-border/70 bg-card/50 rounded-xl px-2.5 py-1.5 font-mono text-[9px] text-muted-foreground flex items-center gap-1.5 backdrop-blur-md shadow-sm hover:border-cyan-500/50 transition-all duration-300">
-            <span className="w-1.5 h-1.5 rounded-full bg-cyan-500 animate-pulse" />
-            <span>Dev Mode</span>
-            <span className="text-cyan-500 font-bold pl-1">&gt;_</span>
-          </div>
-
-          <div className="border border-border/70 bg-card/50 rounded-xl px-2.5 py-1.5 font-mono text-[9px] text-muted-foreground flex flex-col gap-0.5 backdrop-blur-md shadow-sm hover:border-cyan-500/50 transition-all duration-300">
-            <div>Commit</div>
-            <div className="text-cyan-500 font-bold">a1b2c3d</div>
-          </div>
-        </div>
-
-        {/* 6. BOTTOM RIGHT MARGIN: Design to Code Node Chain */}
-        <div className="absolute bottom-6 right-[1.5%] hidden xl:block pointer-events-auto">
-          <div className="flex items-center gap-2 font-mono text-[9px] text-muted-foreground/80 bg-card/40 border border-border/60 hover:border-cyan-500/60 hover:text-foreground px-3 py-1.5 rounded-full backdrop-blur-md shadow-sm transition-all duration-300">
-            <span className="text-cyan-500 font-semibold">Design</span>
-            <span className="text-muted-foreground/40">→</span>
-            <span>Component</span>
-            <span className="text-muted-foreground/40">→</span>
-            <span className="text-emerald-500 font-bold">Code</span>
-          </div>
+        {/* MID-RIGHT NODE: Full-Stack System Flow */}
+        <div
+          className={`absolute top-[230px] right-[4%] hidden xl:flex items-center gap-2 font-mono text-[10px] border px-3 py-1 rounded-full transition-all duration-300 backdrop-blur-sm ${
+            activeNode === 'system'
+              ? 'border-emerald-500/60 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 shadow-sm shadow-emerald-500/10 scale-105'
+              : 'border-border/60 bg-card/40 text-muted-foreground/75'
+          }`}
+        >
+          <span>API</span>
+          <span className="text-muted-foreground/40">→</span>
+          <span>Service</span>
+          <span className="text-muted-foreground/40">→</span>
+          <span className="text-emerald-500 font-medium">UI</span>
         </div>
       </motion.div>
     </div>
