@@ -8,6 +8,8 @@ export default function HeroBackground() {
   const [activeNode, setActiveNode] = useState<string | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
 
+  const [spotlightOpacity, setSpotlightOpacity] = useState(0);
+
   // Smooth springs for hardware-accelerated cursor tracking
   const rawCursorX = useMotionValue(0);
   const rawCursorY = useMotionValue(0);
@@ -46,10 +48,18 @@ export default function HeroBackground() {
       const heroRect = heroElement.getBoundingClientRect();
       const containerRect = containerRef.current.getBoundingClientRect();
 
-      const inHeroArea = e.clientY >= heroRect.top - 80 && e.clientY <= heroRect.bottom + 80;
+      // Active across hero section with a smooth bottom-edge transition buffer
+      const isHeroInView = heroRect.top < window.innerHeight * 0.6 && heroRect.bottom > 80;
+      const inHeroArea = isHeroInView && e.clientY >= 0 && e.clientY <= heroRect.bottom + 80;
 
       if (inHeroArea) {
         setIsHovering(true);
+
+        // Smooth spotlight fade near bottom boundary instead of abrupt cutout
+        const opacity = e.clientY <= heroRect.bottom 
+          ? 1 
+          : Math.max(0, 1 - (e.clientY - heroRect.bottom) / 80);
+        setSpotlightOpacity(opacity);
 
         const x = e.clientX - containerRect.left;
         const y = e.clientY - containerRect.top;
@@ -94,6 +104,7 @@ export default function HeroBackground() {
         setActiveNode(closestId);
       } else {
         setIsHovering(false);
+        setSpotlightOpacity(0);
         setActiveNode(null);
         mouseX.set(0);
         mouseY.set(0);
@@ -102,6 +113,7 @@ export default function HeroBackground() {
 
     const handleMouseLeave = () => {
       setIsHovering(false);
+      setSpotlightOpacity(0);
       setActiveNode(null);
       mouseX.set(0);
       mouseY.set(0);
@@ -119,78 +131,205 @@ export default function HeroBackground() {
     <div
       ref={containerRef}
       aria-hidden="true"
-      className="absolute top-0 left-1/2 -translate-x-1/2 w-screen h-full pointer-events-none select-none overflow-hidden z-0"
+      className="absolute top-0 left-1/2 -translate-x-1/2 w-screen h-[calc(100%+80px)] pointer-events-none select-none overflow-hidden z-0 [mask-image:linear-gradient(to_bottom,black_82%,transparent_100%)]"
     >
       {/* 1. Accent #0891b2 Cursor Spotlight Glow */}
       {!reducedMotion && !isMobile && (
         <motion.div
-          className="absolute w-[420px] h-[420px] rounded-full pointer-events-none transition-opacity duration-500 blur-3xl bg-[#0891b2]/20 dark:bg-[#0891b2]/30"
+          className="absolute w-[420px] h-[420px] rounded-full pointer-events-none transition-opacity duration-300 blur-3xl bg-[#0891b2]/20 dark:bg-[#0891b2]/30"
           style={{
             x: smoothCursorX,
             y: smoothCursorY,
             translateX: '-50%',
             translateY: '-50%',
-            opacity: isHovering ? 1 : 0,
+            opacity: isHovering ? spotlightOpacity : 0,
           }}
         />
       )}
 
-      {/* 2. Precision SVG Vector Blueprint Network */}
+      {/* 2. Precision SVG Dynamic Blueprint Lines Traversing to Very End of Hero (120s-200s Ultra Slow Motion) */}
       <svg className="w-full h-full absolute inset-0">
-        <defs>
-          <pattern
-            id="hero-dot-grid"
-            width="32"
-            height="32"
-            patternUnits="userSpaceOnUse"
-          >
-            <circle
-              cx="16"
-              cy="16"
-              r="0.75"
-              className="fill-neutral-400/30 dark:fill-neutral-600/30"
-            />
-          </pattern>
-        </defs>
+        <g stroke="currentColor" fill="none" strokeWidth="0.85" className="text-neutral-400/30 dark:text-neutral-600/30">
+          {/* Randomized Constellation Line 1 (Left Area - 120s Ultra Slow Motion) */}
+          <motion.path
+            animate={
+              reducedMotion
+                ? {}
+                : {
+                    d: [
+                      "M 4% 80 Q 28% 440 12% 260 T 18% 680",
+                      "M 26% 510 Q 8% 190 32% 580 T 10% 310",
+                      "M 1% 20 Q 38% 420 6% 340 T 22% 720",
+                      "M 4% 80 Q 28% 440 12% 260 T 18% 680",
+                    ],
+                    strokeDashoffset: [0, -300, -600, 0],
+                  }
+            }
+            transition={{
+              duration: 120,
+              repeat: Infinity,
+              repeatType: "mirror",
+              ease: "easeInOut",
+            }}
+            strokeDasharray="4 4"
+          />
 
-        {/* Minimal dot grid background */}
-        <rect width="100%" height="100%" fill="url(#hero-dot-grid)" opacity="0.85" />
+          {/* Randomized Constellation Line 2 (Right Area - 135s Ultra Slow Motion) */}
+          <motion.path
+            animate={
+              reducedMotion
+                ? {}
+                : {
+                    d: [
+                      "M 98% 30 Q 72% 480 94% 290 T 82% 710",
+                      "M 76% 550 Q 94% 140 80% 460 T 96% 220",
+                      "M 90% 10 Q 64% 540 98% 380 T 74% 680",
+                      "M 98% 30 Q 72% 480 94% 290 T 82% 710",
+                    ],
+                    strokeDashoffset: [0, 300, 600, 0],
+                  }
+            }
+            transition={{
+              duration: 135,
+              delay: 3.0,
+              repeat: Infinity,
+              repeatType: "mirror",
+              ease: "easeInOut",
+            }}
+            strokeDasharray="3 3"
+          />
 
-        {/* Dynamic blueprint lines in negative space */}
-        <g stroke="currentColor" fill="none" strokeWidth="0.75" className="text-neutral-400/25 dark:text-neutral-600/25">
-          <path d="M 11% 40 Q 2% 90 2.5% 140" strokeDasharray="3 3" />
-          <path d="M 2.5% 140 Q 9% 200 7.5% 260" strokeDasharray="3 3" />
-          <path d="M 7.5% 260 Q 1% 330 3% 390" strokeDasharray="3 3" />
-          <path d="M 95.5% 60 Q 88% 125 89.5% 190" strokeDasharray="3 3" />
-          <path d="M 89.5% 190 Q 99% 265 98% 340" strokeDasharray="3 3" />
+          {/* Line 1: Randomized Start (Top-Left) -> End of Hero (150s Ultra Slow Motion) */}
+          <motion.path
+            animate={
+              reducedMotion
+                ? {}
+                : {
+                    d: [
+                      "M -140 -20 Q 420 410 880 180 T 1820 680",
+                      "M -60 380 Q 520 120 980 540 T 1820 740",
+                      "M -200 -80 Q 280 520 740 260 T 1820 620",
+                      "M -140 -20 Q 420 410 880 180 T 1820 680",
+                    ],
+                    strokeDashoffset: [0, -360, -720, 0],
+                  }
+            }
+            transition={{
+              duration: 150,
+              delay: 1.5,
+              repeat: Infinity,
+              repeatType: "mirror",
+              ease: "easeInOut",
+            }}
+            strokeDasharray="6 4"
+            opacity="0.65"
+          />
+
+          {/* Line 2: Randomized Start (Mid-Left) -> End of Hero (165s Ultra Slow Motion) */}
+          <motion.path
+            animate={
+              reducedMotion
+                ? {}
+                : {
+                    d: [
+                      "M -80 440 C 360 180, 720 610, 1900 320",
+                      "M -180 310 C 480 440, 850 160, 1900 690",
+                      "M -30 520 C 240 240, 680 480, 1900 750",
+                      "M -80 440 C 360 180, 720 610, 1900 320",
+                    ],
+                    strokeDashoffset: [0, 360, 720, 0],
+                  }
+            }
+            transition={{
+              duration: 165,
+              delay: 4.5,
+              repeat: Infinity,
+              repeatType: "mirror",
+              ease: "easeInOut",
+            }}
+            strokeDasharray="4 4"
+            opacity="0.55"
+          />
+
+          {/* Line 3: Randomized Start (Top Center-Left) -> End of Hero (180s Ultra Slow Motion) */}
+          <motion.path
+            animate={
+              reducedMotion
+                ? {}
+                : {
+                    d: [
+                      "M 120 -80 Q 610 490 1150 280 T 1860 680",
+                      "M -90 320 Q 480 380 980 630 T 1860 720",
+                      "M 310 -140 Q 720 560 1250 210 T 1860 760",
+                      "M 120 -80 Q 610 490 1150 280 T 1860 680",
+                    ],
+                    strokeDashoffset: [0, -360, 0],
+                  }
+            }
+            transition={{
+              duration: 180,
+              delay: 2.5,
+              repeat: Infinity,
+              repeatType: "mirror",
+              ease: "easeInOut",
+            }}
+            strokeDasharray="5 5"
+            opacity="0.6"
+          />
+
+          {/* Line 4 (END OF HERO LINE): Traversing Bottom Boundary of Hero (200s Ultra Slow Motion) */}
+          <motion.path
+            animate={
+              reducedMotion
+                ? {}
+                : {
+                    d: [
+                      "M -160 620 Q 520 480 1050 710 T 1880 690",
+                      "M -50 720 Q 680 550 1180 690 T 1880 780",
+                      "M -220 510 Q 380 640 920 570 T 1880 660",
+                      "M -160 620 Q 520 480 1050 710 T 1880 690",
+                    ],
+                    strokeDashoffset: [0, 400, 0],
+                  }
+            }
+            transition={{
+              duration: 200,
+              delay: 6.0,
+              repeat: Infinity,
+              repeatType: "mirror",
+              ease: "easeInOut",
+            }}
+            strokeDasharray="6 4"
+            opacity="0.75"
+          />
         </g>
       </svg>
 
-      {/* 3. 11 Software Engineering Badges Floating & Traversing Across Entire Hero Width & Height */}
+      {/* 3. 11 Software Engineering Badges Floating Across Whole Hero Width & Height */}
       <motion.div
         style={{ x: springMouseX, y: springMouseY }}
         className="w-full h-full relative"
       >
         {/* ================= LEFT MARGIN BADGES ================= */}
 
-        {/* 1. DOCKER NODE (Full Hero Traversal 26s) */}
+        {/* 1. DOCKER NODE (Full Hero Traversal 24s) */}
         <motion.div
           animate={
             reducedMotion
               ? {}
               : {
-                  y: [0, 180, -40, 260, 90, 0],
-                  x: [0, 140, -60, 200, -80, 0],
-                  rotate: [0, 2, -1.5, 2.5, -1, 0],
+                  y: [0, 280, -90, 350, 140, 0],
+                  x: [0, 320, -180, 420, -220, 0],
+                  rotate: [0, 2.5, -2, 3, -1.5, 0],
                 }
           }
           transition={{
-            duration: 26,
+            duration: 24,
             repeat: Infinity,
             repeatType: 'mirror',
             ease: 'easeInOut',
           }}
-          className={`absolute top-[40px] left-[11%] hidden xl:flex items-center gap-1.5 font-mono text-[10px] border px-2.5 py-1 rounded-full transition-all duration-300 backdrop-blur-md opacity-70 hover:opacity-100 ${
+          className={`absolute top-[50px] left-[8%] hidden xl:flex items-center gap-1.5 font-mono text-[10px] border px-2.5 py-1 rounded-full transition-all duration-300 backdrop-blur-md opacity-75 hover:opacity-100 ${
             activeNode === 'degree'
               ? 'border-[#0891b2] bg-[#0891b2]/20 text-[#0891b2] dark:text-cyan-300 shadow-sm shadow-[#0891b2]/20 scale-105 opacity-100'
               : 'border-border/60 bg-card/50 text-muted-foreground/80'
@@ -200,25 +339,25 @@ export default function HeroBackground() {
           <span>{activeNode === 'degree' ? 'container: ready' : 'containerized'}</span>
         </motion.div>
 
-        {/* 2. GIT PUSH NODE (Full Hero Traversal 30s) */}
+        {/* 2. GIT PUSH NODE (Full Hero Traversal 28s) */}
         <motion.div
           animate={
             reducedMotion
               ? {}
               : {
-                  y: [0, -90, 220, -50, 160, 0],
-                  x: [0, 220, -40, 180, -100, 0],
-                  rotate: [0, -2.5, 2, -1.8, 1, 0],
+                  y: [0, -160, 320, -90, 240, 0],
+                  x: [0, 380, -120, 310, -200, 0],
+                  rotate: [0, -3, 2.5, -2, 1.5, 0],
                 }
           }
           transition={{
-            duration: 30,
+            duration: 28,
             delay: 2,
             repeat: Infinity,
             repeatType: 'mirror',
             ease: 'easeInOut',
           }}
-          className={`absolute top-[140px] left-[2.5%] hidden xl:flex items-center gap-1.5 font-mono text-[10px] border px-2.5 py-1 rounded-full transition-all duration-300 backdrop-blur-md opacity-70 hover:opacity-100 ${
+          className={`absolute top-[150px] left-[2%] hidden xl:flex items-center gap-1.5 font-mono text-[10px] border px-2.5 py-1 rounded-full transition-all duration-300 backdrop-blur-md opacity-75 hover:opacity-100 ${
             activeNode === 'git'
               ? 'border-[#0891b2] bg-[#0891b2]/20 text-[#0891b2] dark:text-cyan-300 shadow-sm shadow-[#0891b2]/20 scale-105 opacity-100'
               : 'border-border/60 bg-card/40 text-muted-foreground/80'
@@ -228,25 +367,25 @@ export default function HeroBackground() {
           <span>{activeNode === 'git' ? 'commit: 9f8a2d' : 'push'}</span>
         </motion.div>
 
-        {/* 3. API SYSTEM FLOW NODE (Full Hero Traversal 28s) */}
+        {/* 3. API SYSTEM FLOW NODE (Full Hero Traversal 26s) */}
         <motion.div
           animate={
             reducedMotion
               ? {}
               : {
-                  y: [0, 160, -120, 200, -60, 0],
-                  x: [0, -160, 120, -180, 80, 0],
-                  rotate: [0, 1.8, -2.2, 1.5, 0],
+                  y: [0, 260, -210, 320, -120, 0],
+                  x: [0, -320, 260, -380, 190, 0],
+                  rotate: [0, 2.2, -2.8, 2, -1.2, 0],
                 }
           }
           transition={{
-            duration: 28,
+            duration: 26,
             delay: 1,
             repeat: Infinity,
             repeatType: 'mirror',
             ease: 'easeInOut',
           }}
-          className={`absolute top-[260px] left-[7.5%] hidden xl:flex items-center gap-2 font-mono text-[10px] border px-3 py-1 rounded-full transition-all duration-300 backdrop-blur-md opacity-70 hover:opacity-100 ${
+          className={`absolute top-[270px] left-[6%] hidden xl:flex items-center gap-2 font-mono text-[10px] border px-3 py-1 rounded-full transition-all duration-300 backdrop-blur-md opacity-75 hover:opacity-100 ${
             activeNode === 'system'
               ? 'border-[#0891b2] bg-[#0891b2]/20 text-[#0891b2] dark:text-cyan-300 shadow-sm shadow-[#0891b2]/20 scale-105 opacity-100'
               : 'border-border/60 bg-card/40 text-muted-foreground/80'
@@ -259,25 +398,25 @@ export default function HeroBackground() {
           <span className="text-[#0891b2] font-medium">UI</span>
         </motion.div>
 
-        {/* 4. MAIN BUILD STATUS NODE (Full Hero Traversal 32s) */}
+        {/* 4. MAIN BUILD STATUS NODE (Full Hero Traversal 30s) */}
         <motion.div
           animate={
             reducedMotion
               ? {}
               : {
-                  y: [0, -220, 90, -180, 140, 0],
-                  x: [0, 180, -120, 240, -60, 0],
-                  rotate: [0, -2, 2.5, -1.5, 0],
+                  y: [0, -320, 180, -280, 220, 0],
+                  x: [0, 360, -240, 410, -160, 0],
+                  rotate: [0, -2.6, 3, -2.2, 1.8, 0],
                 }
           }
           transition={{
-            duration: 32,
+            duration: 30,
             delay: 3,
             repeat: Infinity,
             repeatType: 'mirror',
             ease: 'easeInOut',
           }}
-          className={`absolute top-[390px] left-[3%] hidden xl:flex items-center gap-2 font-mono text-[10px] border px-2.5 py-1 rounded-full transition-all duration-300 backdrop-blur-md opacity-70 hover:opacity-100 ${
+          className={`absolute top-[400px] left-[3%] hidden xl:flex items-center gap-2 font-mono text-[10px] border px-2.5 py-1 rounded-full transition-all duration-300 backdrop-blur-md opacity-75 hover:opacity-100 ${
             activeNode === 'build'
               ? 'border-[#0891b2] bg-[#0891b2]/20 text-[#0891b2] dark:text-cyan-300 shadow-sm shadow-[#0891b2]/20 scale-105 opacity-100'
               : 'border-border/60 bg-card/40 text-muted-foreground/85'
@@ -287,25 +426,25 @@ export default function HeroBackground() {
           <span>{activeNode === 'build' ? 'build: passing ✓' : 'main • v2.4'}</span>
         </motion.div>
 
-        {/* 5. NEW SUBTLE BACKGROUND BADGE: SPRING BOOT & POSTGRESQL (Lower Opacity: 35%) */}
+        {/* 5. SPRING BOOT & POSTGRESQL (Full Hero Traversal 27s) */}
         <motion.div
           animate={
             reducedMotion
               ? {}
               : {
-                  y: [0, 210, -130, 190, -70, 0],
-                  x: [0, 160, -120, 210, -90, 0],
-                  rotate: [0, -1.8, 2.1, -1.2, 0],
+                  y: [0, 330, -220, 290, -140, 0],
+                  x: [0, 310, -220, 360, -180, 0],
+                  rotate: [0, -2.2, 2.8, -1.8, 1.2, 0],
                 }
           }
           transition={{
-            duration: 31,
+            duration: 27,
             delay: 1.2,
             repeat: Infinity,
             repeatType: 'mirror',
             ease: 'easeInOut',
           }}
-          className={`absolute top-[110px] left-[22%] hidden xl:flex items-center gap-1.5 font-mono text-[9.5px] border px-2.5 py-1 rounded-full transition-all duration-300 backdrop-blur-md opacity-35 hover:opacity-100 ${
+          className={`absolute top-[110px] left-[20%] hidden xl:flex items-center gap-1.5 font-mono text-[9.5px] border px-2.5 py-1 rounded-full transition-all duration-300 backdrop-blur-md opacity-45 hover:opacity-100 ${
             activeNode === 'spring'
               ? 'border-[#0891b2] bg-[#0891b2]/20 text-[#0891b2] dark:text-cyan-300 shadow-sm shadow-[#0891b2]/20 scale-105 opacity-100'
               : 'border-border/50 bg-card/30 text-muted-foreground/70'
@@ -316,25 +455,25 @@ export default function HeroBackground() {
           <span>postgresql</span>
         </motion.div>
 
-        {/* 6. NEW SUBTLE BACKGROUND BADGE: PERFORMANCE & LIGHTHOUSE (Lower Opacity: 40%) */}
+        {/* 6. PERFORMANCE & LIGHTHOUSE (Full Hero Traversal 23s) */}
         <motion.div
           animate={
             reducedMotion
               ? {}
               : {
-                  y: [0, -180, 140, -210, 80, 0],
-                  x: [0, 190, -140, 170, -60, 0],
-                  rotate: [0, 1.5, -2, 1.3, 0],
+                  y: [0, -280, 240, -310, 150, 0],
+                  x: [0, 340, -260, 290, -120, 0],
+                  rotate: [0, 2, -2.6, 1.8, -1, 0],
                 }
           }
           transition={{
-            duration: 25,
+            duration: 23,
             delay: 3.5,
             repeat: Infinity,
             repeatType: 'mirror',
             ease: 'easeInOut',
           }}
-          className={`absolute top-[310px] left-[18%] hidden xl:flex items-center gap-1.5 font-mono text-[9.5px] border px-2.5 py-1 rounded-full transition-all duration-300 backdrop-blur-md opacity-40 hover:opacity-100 ${
+          className={`absolute top-[320px] left-[16%] hidden xl:flex items-center gap-1.5 font-mono text-[9.5px] border px-2.5 py-1 rounded-full transition-all duration-300 backdrop-blur-md opacity-50 hover:opacity-100 ${
             activeNode === 'perf'
               ? 'border-[#0891b2] bg-[#0891b2]/20 text-[#0891b2] dark:text-cyan-300 shadow-sm shadow-[#0891b2]/20 scale-105 opacity-100'
               : 'border-border/50 bg-card/30 text-muted-foreground/70'
@@ -348,25 +487,25 @@ export default function HeroBackground() {
 
         {/* ================= RIGHT MARGIN BADGES ================= */}
 
-        {/* 7. DESIGN TO CODE DEPLOY NODE (Full Hero Traversal 24s) */}
+        {/* 7. DESIGN TO CODE DEPLOY NODE (Full Hero Traversal 25s) */}
         <motion.div
           animate={
             reducedMotion
               ? {}
               : {
-                  y: [0, 210, -80, 260, -120, 0],
-                  x: [0, -200, 100, -240, 80, 0],
-                  rotate: [0, 2.2, -1.8, 2, 0],
+                  y: [0, 320, -160, 360, -210, 0],
+                  x: [0, -380, 210, -420, 160, 0],
+                  rotate: [0, 2.8, -2.4, 2.6, -1.4, 0],
                 }
           }
           transition={{
-            duration: 24,
+            duration: 25,
             delay: 0.5,
             repeat: Infinity,
             repeatType: 'mirror',
             ease: 'easeInOut',
           }}
-          className={`absolute top-[60px] right-[4.5%] hidden xl:flex items-center gap-1.5 font-mono text-[10px] border px-2.5 py-1 rounded-md transition-all duration-300 backdrop-blur-md opacity-70 hover:opacity-100 ${
+          className={`absolute top-[70px] right-[4%] hidden xl:flex items-center gap-1.5 font-mono text-[10px] border px-2.5 py-1 rounded-md transition-all duration-300 backdrop-blur-md opacity-75 hover:opacity-100 ${
             activeNode === 'deploy'
               ? 'border-[#0891b2] bg-[#0891b2]/20 text-[#0891b2] dark:text-cyan-300 shadow-sm shadow-[#0891b2]/20 scale-105 opacity-100'
               : 'border-border/60 bg-card/50 text-muted-foreground/80'
@@ -383,9 +522,9 @@ export default function HeroBackground() {
             reducedMotion
               ? {}
               : {
-                  y: [0, -160, 180, -90, 210, 0],
-                  x: [0, -140, 160, -180, 90, 0],
-                  rotate: [0, -2, 1.8, -2.2, 0],
+                  y: [0, -260, 290, -180, 310, 0],
+                  x: [0, -280, 290, -350, 180, 0],
+                  rotate: [0, -2.5, 2.2, -2.8, 1.5, 0],
                 }
           }
           transition={{
@@ -395,7 +534,7 @@ export default function HeroBackground() {
             repeatType: 'mirror',
             ease: 'easeInOut',
           }}
-          className={`absolute top-[190px] right-[10.5%] hidden xl:flex items-center gap-2 font-mono text-[10px] border px-2.5 py-1 rounded-lg transition-all duration-300 backdrop-blur-md opacity-70 hover:opacity-100 ${
+          className={`absolute top-[190px] right-[9%] hidden xl:flex items-center gap-2 font-mono text-[10px] border px-2.5 py-1 rounded-lg transition-all duration-300 backdrop-blur-md opacity-75 hover:opacity-100 ${
             activeNode === 'component'
               ? 'border-[#0891b2] bg-[#0891b2]/20 text-[#0891b2] dark:text-cyan-300 shadow-sm shadow-[#0891b2]/20 scale-105 opacity-100'
               : 'border-border/60 bg-card/50 text-muted-foreground/85'
@@ -410,9 +549,9 @@ export default function HeroBackground() {
             reducedMotion
               ? {}
               : {
-                  y: [0, -240, 110, -190, 80, 0],
-                  x: [0, -220, 140, -160, 60, 0],
-                  rotate: [0, 2, -2.4, 1.6, 0],
+                  y: [0, -340, 210, -300, 160, 0],
+                  x: [0, -410, 240, -320, 140, 0],
+                  rotate: [0, 2.6, -3, 2.2, -1.5, 0],
                 }
           }
           transition={{
@@ -422,7 +561,7 @@ export default function HeroBackground() {
             repeatType: 'mirror',
             ease: 'easeInOut',
           }}
-          className={`absolute top-[340px] right-[2%] hidden xl:flex items-center gap-1.5 font-mono text-[10px] border px-2.5 py-1 rounded-md transition-all duration-300 backdrop-blur-md opacity-70 hover:opacity-100 ${
+          className={`absolute top-[350px] right-[2%] hidden xl:flex items-center gap-1.5 font-mono text-[10px] border px-2.5 py-1 rounded-md transition-all duration-300 backdrop-blur-md opacity-75 hover:opacity-100 ${
             activeNode === 'state'
               ? 'border-[#0891b2] bg-[#0891b2]/20 text-[#0891b2] dark:text-cyan-300 shadow-sm shadow-[#0891b2]/20 scale-105 opacity-100'
               : 'border-border/60 bg-card/50 text-muted-foreground/80'
@@ -433,25 +572,25 @@ export default function HeroBackground() {
           <span>view</span>
         </motion.div>
 
-        {/* 10. NEW SUBTLE BACKGROUND BADGE: PLAYWRIGHT & TESTING (Lower Opacity: 35%) */}
+        {/* 10. PLAYWRIGHT & TESTING (Full Hero Traversal 31s) */}
         <motion.div
           animate={
             reducedMotion
               ? {}
               : {
-                  y: [0, 190, -150, 220, -80, 0],
-                  x: [0, -180, 130, -210, 70, 0],
-                  rotate: [0, -1.6, 2.2, -1.4, 0],
+                  y: [0, 310, -240, 330, -150, 0],
+                  x: [0, -350, 220, -380, 150, 0],
+                  rotate: [0, -2.2, 2.8, -2, 1.2, 0],
                 }
           }
           transition={{
-            duration: 33,
+            duration: 31,
             delay: 2.1,
             repeat: Infinity,
             repeatType: 'mirror',
             ease: 'easeInOut',
           }}
-          className={`absolute top-[140px] right-[24%] hidden xl:flex items-center gap-1.5 font-mono text-[9.5px] border px-2.5 py-1 rounded-full transition-all duration-300 backdrop-blur-md opacity-35 hover:opacity-100 ${
+          className={`absolute top-[130px] right-[22%] hidden xl:flex items-center gap-1.5 font-mono text-[9.5px] border px-2.5 py-1 rounded-full transition-all duration-300 backdrop-blur-md opacity-45 hover:opacity-100 ${
             activeNode === 'test'
               ? 'border-[#0891b2] bg-[#0891b2]/20 text-[#0891b2] dark:text-cyan-300 shadow-sm shadow-[#0891b2]/20 scale-105 opacity-100'
               : 'border-border/50 bg-card/30 text-muted-foreground/70'
@@ -462,25 +601,25 @@ export default function HeroBackground() {
           <span className="text-[#0891b2] font-medium">{activeNode === 'test' ? 'test: 100% pass' : 'unit test'}</span>
         </motion.div>
 
-        {/* 11. NEW SUBTLE BACKGROUND BADGE: TAILWIND & CSS TOKENS (Lower Opacity: 40%) */}
+        {/* 11. TAILWIND & CSS TOKENS (Full Hero Traversal 26s) */}
         <motion.div
           animate={
             reducedMotion
               ? {}
               : {
-                  y: [0, -200, 130, -170, 90, 0],
-                  x: [0, -160, 110, -190, 60, 0],
-                  rotate: [0, 1.7, -1.9, 1.2, 0],
+                  y: [0, -310, 230, -270, 140, 0],
+                  x: [0, -310, 190, -230, 120, 0],
+                  rotate: [0, 2.4, -2.6, 1.8, -1.2, 0],
                 }
           }
           transition={{
-            duration: 27,
+            duration: 26,
             delay: 0.9,
             repeat: Infinity,
             repeatType: 'mirror',
             ease: 'easeInOut',
           }}
-          className={`absolute top-[360px] right-[18%] hidden xl:flex items-center gap-1.5 font-mono text-[9.5px] border px-2.5 py-1 rounded-full transition-all duration-300 backdrop-blur-md opacity-40 hover:opacity-100 ${
+          className={`absolute top-[370px] right-[16%] hidden xl:flex items-center gap-1.5 font-mono text-[9.5px] border px-2.5 py-1 rounded-full transition-all duration-300 backdrop-blur-md opacity-50 hover:opacity-100 ${
             activeNode === 'tokens'
               ? 'border-[#0891b2] bg-[#0891b2]/20 text-[#0891b2] dark:text-cyan-300 shadow-sm shadow-[#0891b2]/20 scale-105 opacity-100'
               : 'border-border/50 bg-card/30 text-muted-foreground/70'

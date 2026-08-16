@@ -1,0 +1,17 @@
+---
+export interface Props {
+  moduleName?: string;
+}
+
+const { moduleName = "module" } = Astro.props;
+---
+
+<div class="inline-flex items-center gap-2.5 font-mono text-xs border border-accent/40 bg-accent/10 text-accent px-3.5 py-1.5 rounded-full shadow-sm shadow-accent/10 mb-6 max-w-max">
+  <span class="relative flex h-2 w-2 items-center justify-center">
+    <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-accent opacity-75"></span>
+    <span class="relative inline-flex rounded-full h-2 w-2 bg-accent"></span>
+  </span>
+  <span class="font-bold">./under-construction</span>
+  <span class="text-muted-foreground/50">|</span>
+  <span class="text-muted-foreground font-normal">{moduleName} in active development</span>
+</div>

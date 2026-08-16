@@ -1,0 +1,130 @@
+---
+export interface Props {
+  type: "about" | "projects" | "blog" | "contact";
+}
+
+const { type } = Astro.props;
+---
+
+<div class="relative w-full max-w-lg mx-auto aspect-[16/10] my-6 flex items-center justify-center">
+  {/* Ambient background aura glow */}
+  <div class="absolute inset-0 bg-[#0891b2]/10 dark:bg-[#0891b2]/15 blur-2xl rounded-3xl pointer-events-none"></div>
+
+  {/* Outer Blueprint Container Frame */}
+  <div class="relative w-full h-full bg-card/60 backdrop-blur-sm border border-border/80 rounded-2xl p-6 shadow-card flex flex-col justify-between overflow-hidden group">
+    {/* Blueprint Corner Accents */}
+    <div class="absolute top-2 left-2 text-[9px] font-mono text-accent/60">+</div>
+    <div class="absolute top-2 right-2 text-[9px] font-mono text-accent/60">+</div>
+    <div class="absolute bottom-2 left-2 text-[9px] font-mono text-accent/60">+</div>
+    <div class="absolute bottom-2 right-2 text-[9px] font-mono text-accent/60">+</div>
+
+    {/* Top Header Bar */}
+    <div class="flex items-center justify-between border-b border-border/60 pb-3 font-mono text-[11px]">
+      <div class="flex items-center gap-2">
+        <span class="w-2 h-2 rounded-full bg-accent animate-pulse"></span>
+        <span class="text-accent font-bold">./sketched-blueprint.svg</span>
+      </div>
+      <span class="text-muted-foreground/60">type: vector // 60fps</span>
+    </div>
+
+    {/* Center Sketched Vector Illustration */}
+    <div class="relative flex-grow flex items-center justify-center py-4">
+      {type === "about" && (
+        <svg viewBox="0 0 320 180" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-full h-full max-h-[160px] text-foreground/80">
+          {/* Sketched Terminal Window */}
+          <rect x="40" y="20" width="240" height="140" rx="10" stroke="currentColor" stroke-width="1.5" stroke-dasharray="6 3" class="text-accent/60" />
+          <line x1="40" y1="45" x2="280" y2="45" stroke="currentColor" stroke-width="1" class="text-border" />
+          <circle cx="55" cy="32" r="3" fill="currentColor" class="text-accent" />
+          <circle cx="67" cy="32" r="3" fill="currentColor" class="text-muted-foreground/40" />
+          <circle cx="79" cy="32" r="3" fill="currentColor" class="text-muted-foreground/40" />
+
+          {/* Sketched Architecture Nodes */}
+          <circle cx="90" cy="95" r="18" stroke="currentColor" stroke-width="1.5" class="text-accent" />
+          <text x="90" y="99" text-anchor="middle" font-family="monospace" font-size="10" fill="currentColor" font-weight="bold">CS</text>
+
+          <line x1="108" y1="95" x2="152" y2="95" stroke="currentColor" stroke-width="1.5" stroke-dasharray="3 3" class="text-accent/70" />
+
+          <circle cx="170" cy="95" r="18" stroke="currentColor" stroke-width="1.5" class="text-foreground" />
+          <text x="170" y="99" text-anchor="middle" font-family="monospace" font-size="10" fill="currentColor">API</text>
+
+          <line x1="188" y1="95" x2="232" y2="95" stroke="currentColor" stroke-width="1.5" stroke-dasharray="3 3" class="text-accent/70" />
+
+          <circle cx="250" cy="95" r="18" stroke="currentColor" stroke-width="1.5" class="text-accent" />
+          <text x="250" y="99" text-anchor="middle" font-family="monospace" font-size="10" fill="currentColor" font-weight="bold">UI</text>
+
+          {/* Sketched Graduation Cap & Code Brackets */}
+          <path d="M 130 135 L 160 120 L 190 135 L 160 150 Z" stroke="currentColor" stroke-width="1.2" class="text-accent" />
+          <path d="M 140 140 L 140 152 Q 160 162 180 152 L 180 140" stroke="currentColor" stroke-width="1.2" class="text-accent" />
+        </svg>
+      )}
+
+      {type === "projects" && (
+        <svg viewBox="0 0 320 180" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-full h-full max-h-[160px] text-foreground/80">
+          {/* Sketched Wireframe Window */}
+          <rect x="30" y="20" width="260" height="140" rx="10" stroke="currentColor" stroke-width="1.5" class="text-accent/70" />
+          
+          {/* Sidebar Wireframe */}
+          <rect x="45" y="35" width="60" height="110" rx="6" stroke="currentColor" stroke-width="1" stroke-dasharray="4 2" class="text-border" />
+          <line x1="55" y1="50" x2="90" y2="50" stroke="currentColor" stroke-width="2" class="text-accent" />
+          <line x1="55" y1="65" x2="85" y2="65" stroke="currentColor" stroke-width="1" class="text-muted-foreground/60" />
+          <line x1="55" y1="78" x2="80" y2="78" stroke="currentColor" stroke-width="1" class="text-muted-foreground/60" />
+
+          {/* Card Showcase Wireframe */}
+          <rect x="115" y="35" width="160" height="70" rx="6" stroke="currentColor" stroke-width="1.5" class="text-foreground" />
+          <path d="M 140 60 L 165 85 L 185 70 L 215 95" stroke="currentColor" stroke-width="1.5" class="text-accent" />
+          <circle cx="210" cy="52" r="6" stroke="currentColor" stroke-width="1.2" class="text-accent" />
+
+          {/* Sketched Dimension Guides */}
+          <line x1="115" y1="120" x2="275" y2="120" stroke="currentColor" stroke-width="1" stroke-dasharray="3 3" class="text-accent/60" />
+          <text x="195" y="135" text-anchor="middle" font-family="monospace" font-size="9" fill="currentColor" class="text-accent font-bold">width: 100%</text>
+        </svg>
+      )}
+
+      {type === "blog" && (
+        <svg viewBox="0 0 320 180" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-full h-full max-h-[160px] text-foreground/80">
+          {/* Sketched Notebook / Article Page */}
+          <rect x="60" y="20" width="200" height="140" rx="8" stroke="currentColor" stroke-width="1.5" class="text-foreground" />
+          
+          {/* Sketched Lines & Header */}
+          <line x1="85" y1="45" x2="160" y2="45" stroke="currentColor" stroke-width="2.5" class="text-accent" />
+          <line x1="85" y1="65" x2="235" y2="65" stroke="currentColor" stroke-width="1" stroke-dasharray="5 3" class="text-muted-foreground/70" />
+          <line x1="85" y1="80" x2="220" y2="80" stroke="currentColor" stroke-width="1" stroke-dasharray="5 3" class="text-muted-foreground/70" />
+          <line x1="85" y1="95" x2="230" y2="95" stroke="currentColor" stroke-width="1" stroke-dasharray="5 3" class="text-muted-foreground/70" />
+          
+          {/* Sketched RSS Antenna */}
+          <circle cx="225" cy="42" r="4" fill="currentColor" class="text-accent" />
+          <path d="M 220 35 A 10 10 0 0 1 235 48" stroke="currentColor" stroke-width="1.5" class="text-accent" />
+          <path d="M 215 30 A 16 16 0 0 1 240 53" stroke="currentColor" stroke-width="1.5" stroke-dasharray="2 2" class="text-accent" />
+
+          {/* Sketched Pen Stylus */}
+          <path d="M 170 120 L 220 70 L 230 80 L 180 130 Z" stroke="currentColor" stroke-width="1.2" class="text-accent" />
+          <line x1="170" y1="120" x2="165" y2="135" stroke="currentColor" stroke-width="1.2" class="text-accent" />
+        </svg>
+      )}
+
+      {type === "contact" && (
+        <svg viewBox="0 0 320 180" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-full h-full max-h-[160px] text-foreground/80">
+          {/* Sketched Envelope Node */}
+          <rect x="70" y="40" width="180" height="100" rx="8" stroke="currentColor" stroke-width="1.5" class="text-foreground" />
+          <path d="M 70 40 L 160 100 L 250 40" stroke="currentColor" stroke-width="1.5" class="text-accent" />
+
+          {/* Sketched Radar Signal Waves */}
+          <circle cx="160" cy="90" r="15" stroke="currentColor" stroke-width="1" stroke-dasharray="3 3" class="text-accent/60" />
+          <circle cx="160" cy="90" r="30" stroke="currentColor" stroke-width="1" stroke-dasharray="4 4" class="text-accent/40" />
+
+          {/* Location Pin */}
+          <path d="M 230 110 C 230 100 245 90 245 102 C 245 112 230 125 230 125 C 230 125 215 112 215 102 C 215 90 230 100 230 110 Z" stroke="currentColor" stroke-width="1.2" class="text-accent" />
+          <circle cx="230" cy="102" r="3" fill="currentColor" class="text-accent" />
+
+          <text x="160" y="160" text-anchor="middle" font-family="monospace" font-size="9" fill="currentColor" class="text-accent font-bold">status: awaiting signal</text>
+        </svg>
+      )}
+    </div>
+
+    {/* Bottom Footer Metadata Bar */}
+    <div class="flex items-center justify-between border-t border-border/60 pt-3 font-mono text-[10px] text-muted-foreground/70">
+      <span>sketch: blueprint v2</span>
+      <span class="text-accent font-medium">status: draft</span>
+    </div>
+  </div>
+</div>

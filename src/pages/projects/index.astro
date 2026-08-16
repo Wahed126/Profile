@@ -1,0 +1,39 @@
+---
+import Layout from "@/layouts/Layout.astro";
+import PageBackground from "@/components/ui/PageBackground.astro";
+import UnderConstructionBanner from "@/components/ui/UnderConstructionBanner.astro";
+import SketchedIllustration from "@/components/ui/SketchedIllustration.astro";
+import HomeReturnFooter from "@/components/ui/HomeReturnFooter.astro";
+
+const seoData = {
+  title: "Projects | Wahed - Portfolio",
+  description: "Explore engineering case studies, full-stack web applications, and interactive design systems built by Wahed.",
+};
+---
+
+<Layout {...seoData}>
+  <div class="relative pt-24 md:pt-32 pb-8 flex flex-col items-center justify-between min-h-[75vh]">
+    <PageBackground />
+
+    {/* Center Content: Under Construction & Sketched Illustration */}
+    <div class="relative z-10 flex flex-col items-center text-center max-w-xl mx-auto w-full my-auto">
+      <UnderConstructionBanner moduleName="projects archive" />
+
+      <h1 class="text-3xl md:text-5xl font-bold font-mono tracking-tight text-foreground mb-3">
+        ./projects
+      </h1>
+
+      <p class="text-sm md:text-base text-muted-foreground font-mono leading-relaxed mb-6">
+        This archive is currently under construction. Complete case studies and interactive project demos are being prepared.
+      </p>
+
+      {/* Sketched Vector Blueprint Illustration */}
+      <SketchedIllustration type="projects" />
+    </div>
+
+    {/* Home Line Return Footer at the end of the page */}
+    <div class="w-full relative z-10">
+      <HomeReturnFooter />
+    </div>
+  </div>
+</Layout>
