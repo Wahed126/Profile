@@ -73,6 +73,23 @@
                 transform 0.35s cubic-bezier(0.16, 1, 0.3, 1),
                 filter 0.7s cubic-bezier(0.16, 1, 0.3, 1);
   }
+
+  .animate-text-shimmer {
+    background-size: 200% auto;
+    animation: text-shimmer 5s ease-in-out infinite;
+  }
+}
+
+@keyframes text-shimmer {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
 }
 
 /* Reduced motion preference override */

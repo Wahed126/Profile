@@ -310,26 +310,26 @@ export default function HeroBackground() {
         style={{ x: springMouseX, y: springMouseY }}
         className="w-full h-full relative"
       >
-        {/* ================= LEFT MARGIN BADGES ================= */}
+        {/* ================= LEFT MARGIN BADGES (Restrained Peripheral Float) ================= */}
 
-        {/* 1. DOCKER NODE (Full Hero Traversal 24s) */}
+        {/* 1. DOCKER NODE */}
         <motion.div
           animate={
             reducedMotion
               ? {}
               : {
-                  y: [0, 280, -90, 350, 140, 0],
-                  x: [0, 320, -180, 420, -220, 0],
-                  rotate: [0, 2.5, -2, 3, -1.5, 0],
+                  y: [0, 25, -20, 15, 0],
+                  x: [0, 30, -15, 20, 0],
+                  rotate: [0, 1.5, -1, 1, 0],
                 }
           }
           transition={{
-            duration: 24,
+            duration: 22,
             repeat: Infinity,
             repeatType: 'mirror',
             ease: 'easeInOut',
           }}
-          className={`absolute top-[50px] left-[8%] hidden xl:flex items-center gap-1.5 font-mono text-[10px] border px-2.5 py-1 rounded-full transition-all duration-300 backdrop-blur-md opacity-75 hover:opacity-100 ${
+          className={`absolute top-[50px] left-[4%] hidden xl:flex items-center gap-1.5 font-mono text-[10px] border px-2.5 py-1 rounded-full transition-all duration-300 backdrop-blur-md opacity-60 hover:opacity-100 ${
             activeNode === 'degree'
               ? 'border-[#0891b2] bg-[#0891b2]/20 text-[#0891b2] dark:text-cyan-300 shadow-sm shadow-[#0891b2]/20 scale-105 opacity-100'
               : 'border-border/60 bg-card/50 text-muted-foreground/80'
@@ -339,25 +339,25 @@ export default function HeroBackground() {
           <span>{activeNode === 'degree' ? 'container: ready' : 'containerized'}</span>
         </motion.div>
 
-        {/* 2. GIT PUSH NODE (Full Hero Traversal 28s) */}
+        {/* 2. GIT PUSH NODE */}
         <motion.div
           animate={
             reducedMotion
               ? {}
               : {
-                  y: [0, -160, 320, -90, 240, 0],
-                  x: [0, 380, -120, 310, -200, 0],
-                  rotate: [0, -3, 2.5, -2, 1.5, 0],
+                  y: [0, -20, 30, -15, 0],
+                  x: [0, 25, -20, 15, 0],
+                  rotate: [0, -1.5, 1.2, -1, 0],
                 }
           }
           transition={{
-            duration: 28,
+            duration: 26,
             delay: 2,
             repeat: Infinity,
             repeatType: 'mirror',
             ease: 'easeInOut',
           }}
-          className={`absolute top-[150px] left-[2%] hidden xl:flex items-center gap-1.5 font-mono text-[10px] border px-2.5 py-1 rounded-full transition-all duration-300 backdrop-blur-md opacity-75 hover:opacity-100 ${
+          className={`absolute top-[160px] left-[2%] hidden xl:flex items-center gap-1.5 font-mono text-[10px] border px-2.5 py-1 rounded-full transition-all duration-300 backdrop-blur-md opacity-60 hover:opacity-100 ${
             activeNode === 'git'
               ? 'border-[#0891b2] bg-[#0891b2]/20 text-[#0891b2] dark:text-cyan-300 shadow-sm shadow-[#0891b2]/20 scale-105 opacity-100'
               : 'border-border/60 bg-card/40 text-muted-foreground/80'
@@ -367,25 +367,25 @@ export default function HeroBackground() {
           <span>{activeNode === 'git' ? 'commit: 9f8a2d' : 'push'}</span>
         </motion.div>
 
-        {/* 3. API SYSTEM FLOW NODE (Full Hero Traversal 26s) */}
+        {/* 3. API SYSTEM FLOW NODE */}
         <motion.div
           animate={
             reducedMotion
               ? {}
               : {
-                  y: [0, 260, -210, 320, -120, 0],
-                  x: [0, -320, 260, -380, 190, 0],
-                  rotate: [0, 2.2, -2.8, 2, -1.2, 0],
+                  y: [0, 30, -25, 20, 0],
+                  x: [0, -20, 25, -15, 0],
+                  rotate: [0, 1.2, -1.5, 1, 0],
                 }
           }
           transition={{
-            duration: 26,
+            duration: 24,
             delay: 1,
             repeat: Infinity,
             repeatType: 'mirror',
             ease: 'easeInOut',
           }}
-          className={`absolute top-[270px] left-[6%] hidden xl:flex items-center gap-2 font-mono text-[10px] border px-3 py-1 rounded-full transition-all duration-300 backdrop-blur-md opacity-75 hover:opacity-100 ${
+          className={`absolute top-[280px] left-[5%] hidden xl:flex items-center gap-2 font-mono text-[10px] border px-3 py-1 rounded-full transition-all duration-300 backdrop-blur-md opacity-60 hover:opacity-100 ${
             activeNode === 'system'
               ? 'border-[#0891b2] bg-[#0891b2]/20 text-[#0891b2] dark:text-cyan-300 shadow-sm shadow-[#0891b2]/20 scale-105 opacity-100'
               : 'border-border/60 bg-card/40 text-muted-foreground/80'
@@ -398,25 +398,25 @@ export default function HeroBackground() {
           <span className="text-[#0891b2] font-medium">UI</span>
         </motion.div>
 
-        {/* 4. MAIN BUILD STATUS NODE (Full Hero Traversal 30s) */}
+        {/* 4. MAIN BUILD STATUS NODE */}
         <motion.div
           animate={
             reducedMotion
               ? {}
               : {
-                  y: [0, -320, 180, -280, 220, 0],
-                  x: [0, 360, -240, 410, -160, 0],
-                  rotate: [0, -2.6, 3, -2.2, 1.8, 0],
+                  y: [0, -25, 20, -30, 0],
+                  x: [0, 20, -25, 15, 0],
+                  rotate: [0, -1.2, 1.5, -1, 0],
                 }
           }
           transition={{
-            duration: 30,
+            duration: 28,
             delay: 3,
             repeat: Infinity,
             repeatType: 'mirror',
             ease: 'easeInOut',
           }}
-          className={`absolute top-[400px] left-[3%] hidden xl:flex items-center gap-2 font-mono text-[10px] border px-2.5 py-1 rounded-full transition-all duration-300 backdrop-blur-md opacity-75 hover:opacity-100 ${
+          className={`absolute top-[410px] left-[3%] hidden xl:flex items-center gap-2 font-mono text-[10px] border px-2.5 py-1 rounded-full transition-all duration-300 backdrop-blur-md opacity-60 hover:opacity-100 ${
             activeNode === 'build'
               ? 'border-[#0891b2] bg-[#0891b2]/20 text-[#0891b2] dark:text-cyan-300 shadow-sm shadow-[#0891b2]/20 scale-105 opacity-100'
               : 'border-border/60 bg-card/40 text-muted-foreground/85'
@@ -426,25 +426,25 @@ export default function HeroBackground() {
           <span>{activeNode === 'build' ? 'build: passing ✓' : 'main • v2.4'}</span>
         </motion.div>
 
-        {/* 5. SPRING BOOT & POSTGRESQL (Full Hero Traversal 27s) */}
+        {/* 5. SPRING BOOT & POSTGRESQL */}
         <motion.div
           animate={
             reducedMotion
               ? {}
               : {
-                  y: [0, 330, -220, 290, -140, 0],
-                  x: [0, 310, -220, 360, -180, 0],
-                  rotate: [0, -2.2, 2.8, -1.8, 1.2, 0],
+                  y: [0, 20, -30, 15, 0],
+                  x: [0, 25, -20, 10, 0],
+                  rotate: [0, -1, 1.2, -1, 0],
                 }
           }
           transition={{
-            duration: 27,
+            duration: 25,
             delay: 1.2,
             repeat: Infinity,
             repeatType: 'mirror',
             ease: 'easeInOut',
           }}
-          className={`absolute top-[110px] left-[20%] hidden xl:flex items-center gap-1.5 font-mono text-[9.5px] border px-2.5 py-1 rounded-full transition-all duration-300 backdrop-blur-md opacity-45 hover:opacity-100 ${
+          className={`absolute top-[100px] left-[15%] hidden xl:flex items-center gap-1.5 font-mono text-[9.5px] border px-2.5 py-1 rounded-full transition-all duration-300 backdrop-blur-md opacity-45 hover:opacity-100 ${
             activeNode === 'spring'
               ? 'border-[#0891b2] bg-[#0891b2]/20 text-[#0891b2] dark:text-cyan-300 shadow-sm shadow-[#0891b2]/20 scale-105 opacity-100'
               : 'border-border/50 bg-card/30 text-muted-foreground/70'
@@ -455,15 +455,15 @@ export default function HeroBackground() {
           <span>postgresql</span>
         </motion.div>
 
-        {/* 6. PERFORMANCE & LIGHTHOUSE (Full Hero Traversal 23s) */}
+        {/* 6. PERFORMANCE & LIGHTHOUSE */}
         <motion.div
           animate={
             reducedMotion
               ? {}
               : {
-                  y: [0, -280, 240, -310, 150, 0],
-                  x: [0, 340, -260, 290, -120, 0],
-                  rotate: [0, 2, -2.6, 1.8, -1, 0],
+                  y: [0, -30, 25, -15, 0],
+                  x: [0, 20, -30, 15, 0],
+                  rotate: [0, 1.2, -1, 1, 0],
                 }
           }
           transition={{
@@ -473,7 +473,7 @@ export default function HeroBackground() {
             repeatType: 'mirror',
             ease: 'easeInOut',
           }}
-          className={`absolute top-[320px] left-[16%] hidden xl:flex items-center gap-1.5 font-mono text-[9.5px] border px-2.5 py-1 rounded-full transition-all duration-300 backdrop-blur-md opacity-50 hover:opacity-100 ${
+          className={`absolute top-[340px] left-[13%] hidden xl:flex items-center gap-1.5 font-mono text-[9.5px] border px-2.5 py-1 rounded-full transition-all duration-300 backdrop-blur-md opacity-45 hover:opacity-100 ${
             activeNode === 'perf'
               ? 'border-[#0891b2] bg-[#0891b2]/20 text-[#0891b2] dark:text-cyan-300 shadow-sm shadow-[#0891b2]/20 scale-105 opacity-100'
               : 'border-border/50 bg-card/30 text-muted-foreground/70'
@@ -485,17 +485,17 @@ export default function HeroBackground() {
         </motion.div>
 
 
-        {/* ================= RIGHT MARGIN BADGES ================= */}
+        {/* ================= RIGHT MARGIN BADGES (Restrained Peripheral Float) ================= */}
 
-        {/* 7. DESIGN TO CODE DEPLOY NODE (Full Hero Traversal 25s) */}
+        {/* 7. DESIGN TO CODE DEPLOY NODE */}
         <motion.div
           animate={
             reducedMotion
               ? {}
               : {
-                  y: [0, 320, -160, 360, -210, 0],
-                  x: [0, -380, 210, -420, 160, 0],
-                  rotate: [0, 2.8, -2.4, 2.6, -1.4, 0],
+                  y: [0, 25, -20, 15, 0],
+                  x: [0, -30, 20, -15, 0],
+                  rotate: [0, 1.5, -1.2, 1, 0],
                 }
           }
           transition={{
@@ -505,7 +505,7 @@ export default function HeroBackground() {
             repeatType: 'mirror',
             ease: 'easeInOut',
           }}
-          className={`absolute top-[70px] right-[4%] hidden xl:flex items-center gap-1.5 font-mono text-[10px] border px-2.5 py-1 rounded-md transition-all duration-300 backdrop-blur-md opacity-75 hover:opacity-100 ${
+          className={`absolute top-[70px] right-[4%] hidden xl:flex items-center gap-1.5 font-mono text-[10px] border px-2.5 py-1 rounded-md transition-all duration-300 backdrop-blur-md opacity-60 hover:opacity-100 ${
             activeNode === 'deploy'
               ? 'border-[#0891b2] bg-[#0891b2]/20 text-[#0891b2] dark:text-cyan-300 shadow-sm shadow-[#0891b2]/20 scale-105 opacity-100'
               : 'border-border/60 bg-card/50 text-muted-foreground/80'
@@ -516,15 +516,15 @@ export default function HeroBackground() {
           <span className="text-[#0891b2] font-medium">{activeNode === 'deploy' ? 'deploy: success' : 'code'}</span>
         </motion.div>
 
-        {/* 8. ASYNC COMPONENT NODE (Full Hero Traversal 29s) */}
+        {/* 8. ASYNC COMPONENT NODE */}
         <motion.div
           animate={
             reducedMotion
               ? {}
               : {
-                  y: [0, -260, 290, -180, 310, 0],
-                  x: [0, -280, 290, -350, 180, 0],
-                  rotate: [0, -2.5, 2.2, -2.8, 1.5, 0],
+                  y: [0, -25, 30, -15, 0],
+                  x: [0, -20, 25, -10, 0],
+                  rotate: [0, -1.2, 1.5, -1, 0],
                 }
           }
           transition={{
@@ -534,7 +534,7 @@ export default function HeroBackground() {
             repeatType: 'mirror',
             ease: 'easeInOut',
           }}
-          className={`absolute top-[190px] right-[9%] hidden xl:flex items-center gap-2 font-mono text-[10px] border px-2.5 py-1 rounded-lg transition-all duration-300 backdrop-blur-md opacity-75 hover:opacity-100 ${
+          className={`absolute top-[190px] right-[7%] hidden xl:flex items-center gap-2 font-mono text-[10px] border px-2.5 py-1 rounded-lg transition-all duration-300 backdrop-blur-md opacity-60 hover:opacity-100 ${
             activeNode === 'component'
               ? 'border-[#0891b2] bg-[#0891b2]/20 text-[#0891b2] dark:text-cyan-300 shadow-sm shadow-[#0891b2]/20 scale-105 opacity-100'
               : 'border-border/60 bg-card/50 text-muted-foreground/85'
@@ -543,15 +543,15 @@ export default function HeroBackground() {
           <span>{activeNode === 'component' ? 'bundle: 4.2kB' : '<AsyncComponent />'}</span>
         </motion.div>
 
-        {/* 9. STATE FLOW NODE (Full Hero Traversal 27s) */}
+        {/* 9. STATE FLOW NODE */}
         <motion.div
           animate={
             reducedMotion
               ? {}
               : {
-                  y: [0, -340, 210, -300, 160, 0],
-                  x: [0, -410, 240, -320, 140, 0],
-                  rotate: [0, 2.6, -3, 2.2, -1.5, 0],
+                  y: [0, -30, 20, -25, 0],
+                  x: [0, -25, 30, -15, 0],
+                  rotate: [0, 1.5, -1, 1.2, 0],
                 }
           }
           transition={{
@@ -561,7 +561,7 @@ export default function HeroBackground() {
             repeatType: 'mirror',
             ease: 'easeInOut',
           }}
-          className={`absolute top-[350px] right-[2%] hidden xl:flex items-center gap-1.5 font-mono text-[10px] border px-2.5 py-1 rounded-md transition-all duration-300 backdrop-blur-md opacity-75 hover:opacity-100 ${
+          className={`absolute top-[350px] right-[2%] hidden xl:flex items-center gap-1.5 font-mono text-[10px] border px-2.5 py-1 rounded-md transition-all duration-300 backdrop-blur-md opacity-60 hover:opacity-100 ${
             activeNode === 'state'
               ? 'border-[#0891b2] bg-[#0891b2]/20 text-[#0891b2] dark:text-cyan-300 shadow-sm shadow-[#0891b2]/20 scale-105 opacity-100'
               : 'border-border/60 bg-card/50 text-muted-foreground/80'
@@ -572,15 +572,15 @@ export default function HeroBackground() {
           <span>view</span>
         </motion.div>
 
-        {/* 10. PLAYWRIGHT & TESTING (Full Hero Traversal 31s) */}
+        {/* 10. PLAYWRIGHT & TESTING */}
         <motion.div
           animate={
             reducedMotion
               ? {}
               : {
-                  y: [0, 310, -240, 330, -150, 0],
-                  x: [0, -350, 220, -380, 150, 0],
-                  rotate: [0, -2.2, 2.8, -2, 1.2, 0],
+                  y: [0, 20, -25, 15, 0],
+                  x: [0, -25, 20, -10, 0],
+                  rotate: [0, -1, 1.2, -1, 0],
                 }
           }
           transition={{
@@ -590,7 +590,7 @@ export default function HeroBackground() {
             repeatType: 'mirror',
             ease: 'easeInOut',
           }}
-          className={`absolute top-[130px] right-[22%] hidden xl:flex items-center gap-1.5 font-mono text-[9.5px] border px-2.5 py-1 rounded-full transition-all duration-300 backdrop-blur-md opacity-45 hover:opacity-100 ${
+          className={`absolute top-[130px] right-[16%] hidden xl:flex items-center gap-1.5 font-mono text-[9.5px] border px-2.5 py-1 rounded-full transition-all duration-300 backdrop-blur-md opacity-45 hover:opacity-100 ${
             activeNode === 'test'
               ? 'border-[#0891b2] bg-[#0891b2]/20 text-[#0891b2] dark:text-cyan-300 shadow-sm shadow-[#0891b2]/20 scale-105 opacity-100'
               : 'border-border/50 bg-card/30 text-muted-foreground/70'
@@ -601,15 +601,15 @@ export default function HeroBackground() {
           <span className="text-[#0891b2] font-medium">{activeNode === 'test' ? 'test: 100% pass' : 'unit test'}</span>
         </motion.div>
 
-        {/* 11. TAILWIND & CSS TOKENS (Full Hero Traversal 26s) */}
+        {/* 11. TAILWIND & CSS TOKENS */}
         <motion.div
           animate={
             reducedMotion
               ? {}
               : {
-                  y: [0, -310, 230, -270, 140, 0],
-                  x: [0, -310, 190, -230, 120, 0],
-                  rotate: [0, 2.4, -2.6, 1.8, -1.2, 0],
+                  y: [0, -25, 30, -15, 0],
+                  x: [0, -20, 25, -10, 0],
+                  rotate: [0, 1.2, -1, 1, 0],
                 }
           }
           transition={{
@@ -619,7 +619,7 @@ export default function HeroBackground() {
             repeatType: 'mirror',
             ease: 'easeInOut',
           }}
-          className={`absolute top-[370px] right-[16%] hidden xl:flex items-center gap-1.5 font-mono text-[9.5px] border px-2.5 py-1 rounded-full transition-all duration-300 backdrop-blur-md opacity-50 hover:opacity-100 ${
+          className={`absolute top-[370px] right-[13%] hidden xl:flex items-center gap-1.5 font-mono text-[9.5px] border px-2.5 py-1 rounded-full transition-all duration-300 backdrop-blur-md opacity-45 hover:opacity-100 ${
             activeNode === 'tokens'
               ? 'border-[#0891b2] bg-[#0891b2]/20 text-[#0891b2] dark:text-cyan-300 shadow-sm shadow-[#0891b2]/20 scale-105 opacity-100'
               : 'border-border/50 bg-card/30 text-muted-foreground/70'
