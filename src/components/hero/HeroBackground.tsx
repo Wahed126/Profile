@@ -5,7 +5,6 @@ export default function HeroBackground() {
   const [reducedMotion, setReducedMotion] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
   const [isHovering, setIsHovering] = useState(false);
-  const [activeNode, setActiveNode] = useState<string | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
 
   const [spotlightOpacity, setSpotlightOpacity] = useState(0);
@@ -73,39 +72,9 @@ export default function HeroBackground() {
 
         mouseX.set(((e.clientX - screenCenterX) / screenCenterX) * 8);
         mouseY.set(((heroMouseY - heroCenterY) / heroCenterY) * 8);
-
-        // Responsive node positions for 11 software engineering background badges
-        const w = containerRect.width;
-        const nodePositions = [
-          { id: 'degree', x: w * 0.11, y: 40 },
-          { id: 'git', x: w * 0.025, y: 140 },
-          { id: 'system', x: w * 0.075, y: 260 },
-          { id: 'build', x: w * 0.03, y: 390 },
-          { id: 'spring', x: w * 0.22, y: 110 },
-          { id: 'perf', x: w * 0.18, y: 310 },
-          { id: 'deploy', x: w * 0.955, y: 60 },
-          { id: 'component', x: w * 0.895, y: 190 },
-          { id: 'state', x: w * 0.98, y: 340 },
-          { id: 'test', x: w * 0.76, y: 140 },
-          { id: 'tokens', x: w * 0.82, y: 360 },
-        ];
-
-        let closestId: string | null = null;
-        let minDistance = 220;
-
-        nodePositions.forEach((node) => {
-          const dist = Math.hypot(x - node.x, y - node.y);
-          if (dist < minDistance) {
-            minDistance = dist;
-            closestId = node.id;
-          }
-        });
-
-        setActiveNode(closestId);
       } else {
         setIsHovering(false);
         setSpotlightOpacity(0);
-        setActiveNode(null);
         mouseX.set(0);
         mouseY.set(0);
       }
@@ -114,7 +83,6 @@ export default function HeroBackground() {
     const handleMouseLeave = () => {
       setIsHovering(false);
       setSpotlightOpacity(0);
-      setActiveNode(null);
       mouseX.set(0);
       mouseY.set(0);
     };
@@ -310,7 +278,7 @@ export default function HeroBackground() {
         style={{ x: springMouseX, y: springMouseY }}
         className="w-full h-full relative"
       >
-        {/* ================= LEFT MARGIN BADGES (Restrained Peripheral Float) ================= */}
+        {/* ================= LEFT MARGIN BADGES (Steady Badge + Connecting Blueprint Line + Right Popover) ================= */}
 
         {/* 1. DOCKER NODE */}
         <motion.div
@@ -329,14 +297,22 @@ export default function HeroBackground() {
             repeatType: 'mirror',
             ease: 'easeInOut',
           }}
-          className={`absolute top-[50px] left-[4%] hidden xl:flex items-center gap-1.5 font-mono text-[10px] border px-2.5 py-1 rounded-full transition-all duration-300 backdrop-blur-md opacity-60 hover:opacity-100 ${
-            activeNode === 'degree'
-              ? 'border-[#0891b2] bg-[#0891b2]/20 text-[#0891b2] dark:text-cyan-300 shadow-sm shadow-[#0891b2]/20 scale-105 opacity-100'
-              : 'border-border/60 bg-card/50 text-muted-foreground/80'
-          }`}
+          className="group absolute top-[50px] left-[4%] hidden xl:flex items-center gap-1.5 font-mono text-[10px] border border-border/60 bg-card/50 text-muted-foreground/80 px-2.5 py-1 rounded-full transition-all duration-300 backdrop-blur-md opacity-65 hover:opacity-100 hover:border-[#0891b2] hover:bg-[#0891b2]/20 hover:text-foreground hover:shadow-[0_0_12px_rgba(8,145,178,0.25)] hover:scale-105 cursor-pointer z-20"
         >
           <span className="text-[#0891b2] font-bold">docker:</span>
-          <span>{activeNode === 'degree' ? 'container: ready' : 'containerized'}</span>
+          <span>containerized</span>
+
+          {/* Connecting Line & Popover Pill (to Right Open Space) */}
+          <div className="pointer-events-none absolute left-full top-1/2 -translate-y-1/2 flex items-center opacity-0 group-hover:opacity-100 translate-x-1 group-hover:translate-x-0 transition-all duration-300 z-30">
+            <div className="flex items-center w-6 relative shrink-0">
+              <span className="w-1.5 h-1.5 rounded-full bg-[#0891b2] shadow-[0_0_8px_#0891b2]" />
+              <span className="h-[1.5px] w-full bg-gradient-to-r from-[#0891b2] via-cyan-400 to-cyan-300" />
+              <span className="w-1.5 h-1.5 rounded-full bg-cyan-300 shadow-[0_0_8px_#0891b2]" />
+            </div>
+            <span className="ml-1.5 whitespace-nowrap bg-background/95 text-[#0891b2] dark:text-cyan-300 border border-[#0891b2] px-2.5 py-0.5 rounded-full text-[9.5px] font-mono shadow-[0_0_12px_rgba(8,145,178,0.25)] backdrop-blur-md font-semibold">
+              container: ready ✓
+            </span>
+          </div>
         </motion.div>
 
         {/* 2. GIT PUSH NODE */}
@@ -357,14 +333,22 @@ export default function HeroBackground() {
             repeatType: 'mirror',
             ease: 'easeInOut',
           }}
-          className={`absolute top-[160px] left-[2%] hidden xl:flex items-center gap-1.5 font-mono text-[10px] border px-2.5 py-1 rounded-full transition-all duration-300 backdrop-blur-md opacity-60 hover:opacity-100 ${
-            activeNode === 'git'
-              ? 'border-[#0891b2] bg-[#0891b2]/20 text-[#0891b2] dark:text-cyan-300 shadow-sm shadow-[#0891b2]/20 scale-105 opacity-100'
-              : 'border-border/60 bg-card/40 text-muted-foreground/80'
-          }`}
+          className="group absolute top-[160px] left-[2%] hidden xl:flex items-center gap-1.5 font-mono text-[10px] border border-border/60 bg-card/40 text-muted-foreground/80 px-2.5 py-1 rounded-full transition-all duration-300 backdrop-blur-md opacity-65 hover:opacity-100 hover:border-[#0891b2] hover:bg-[#0891b2]/20 hover:text-foreground hover:shadow-[0_0_12px_rgba(8,145,178,0.25)] hover:scale-105 cursor-pointer z-20"
         >
           <span className="text-[#0891b2] font-bold">git:</span>
-          <span>{activeNode === 'git' ? 'commit: 9f8a2d' : 'push'}</span>
+          <span>push</span>
+
+          {/* Connecting Line & Popover Pill (to Right Open Space) */}
+          <div className="pointer-events-none absolute left-full top-1/2 -translate-y-1/2 flex items-center opacity-0 group-hover:opacity-100 translate-x-1 group-hover:translate-x-0 transition-all duration-300 z-30">
+            <div className="flex items-center w-6 relative shrink-0">
+              <span className="w-1.5 h-1.5 rounded-full bg-[#0891b2] shadow-[0_0_8px_#0891b2]" />
+              <span className="h-[1.5px] w-full bg-gradient-to-r from-[#0891b2] via-cyan-400 to-cyan-300" />
+              <span className="w-1.5 h-1.5 rounded-full bg-cyan-300 shadow-[0_0_8px_#0891b2]" />
+            </div>
+            <span className="ml-1.5 whitespace-nowrap bg-background/95 text-[#0891b2] dark:text-cyan-300 border border-[#0891b2] px-2.5 py-0.5 rounded-full text-[9.5px] font-mono shadow-[0_0_12px_rgba(8,145,178,0.25)] backdrop-blur-md font-semibold">
+              commit: 9f8a2d ✓
+            </span>
+          </div>
         </motion.div>
 
         {/* 3. API SYSTEM FLOW NODE */}
@@ -385,17 +369,25 @@ export default function HeroBackground() {
             repeatType: 'mirror',
             ease: 'easeInOut',
           }}
-          className={`absolute top-[280px] left-[5%] hidden xl:flex items-center gap-2 font-mono text-[10px] border px-3 py-1 rounded-full transition-all duration-300 backdrop-blur-md opacity-60 hover:opacity-100 ${
-            activeNode === 'system'
-              ? 'border-[#0891b2] bg-[#0891b2]/20 text-[#0891b2] dark:text-cyan-300 shadow-sm shadow-[#0891b2]/20 scale-105 opacity-100'
-              : 'border-border/60 bg-card/40 text-muted-foreground/80'
-          }`}
+          className="group absolute top-[280px] left-[5%] hidden xl:flex items-center gap-2 font-mono text-[10px] border border-border/60 bg-card/40 text-muted-foreground/80 px-3 py-1 rounded-full transition-all duration-300 backdrop-blur-md opacity-65 hover:opacity-100 hover:border-[#0891b2] hover:bg-[#0891b2]/20 hover:text-foreground hover:shadow-[0_0_12px_rgba(8,145,178,0.25)] hover:scale-105 cursor-pointer z-20"
         >
           <span>API</span>
           <span className="text-muted-foreground/40">→</span>
           <span>Service</span>
           <span className="text-muted-foreground/40">→</span>
           <span className="text-[#0891b2] font-medium">UI</span>
+
+          {/* Connecting Line & Popover Pill (to Right Open Space) */}
+          <div className="pointer-events-none absolute left-full top-1/2 -translate-y-1/2 flex items-center opacity-0 group-hover:opacity-100 translate-x-1 group-hover:translate-x-0 transition-all duration-300 z-30">
+            <div className="flex items-center w-6 relative shrink-0">
+              <span className="w-1.5 h-1.5 rounded-full bg-[#0891b2] shadow-[0_0_8px_#0891b2]" />
+              <span className="h-[1.5px] w-full bg-gradient-to-r from-[#0891b2] via-cyan-400 to-cyan-300" />
+              <span className="w-1.5 h-1.5 rounded-full bg-cyan-300 shadow-[0_0_8px_#0891b2]" />
+            </div>
+            <span className="ml-1.5 whitespace-nowrap bg-background/95 text-[#0891b2] dark:text-cyan-300 border border-[#0891b2] px-2.5 py-0.5 rounded-full text-[9.5px] font-mono shadow-[0_0_12px_rgba(8,145,178,0.25)] backdrop-blur-md font-semibold">
+              status: 200 OK ✓
+            </span>
+          </div>
         </motion.div>
 
         {/* 4. MAIN BUILD STATUS NODE */}
@@ -416,14 +408,22 @@ export default function HeroBackground() {
             repeatType: 'mirror',
             ease: 'easeInOut',
           }}
-          className={`absolute top-[410px] left-[3%] hidden xl:flex items-center gap-2 font-mono text-[10px] border px-2.5 py-1 rounded-full transition-all duration-300 backdrop-blur-md opacity-60 hover:opacity-100 ${
-            activeNode === 'build'
-              ? 'border-[#0891b2] bg-[#0891b2]/20 text-[#0891b2] dark:text-cyan-300 shadow-sm shadow-[#0891b2]/20 scale-105 opacity-100'
-              : 'border-border/60 bg-card/40 text-muted-foreground/85'
-          }`}
+          className="group absolute top-[410px] left-[3%] hidden xl:flex items-center gap-2 font-mono text-[10px] border border-border/60 bg-card/40 text-muted-foreground/85 px-2.5 py-1 rounded-full transition-all duration-300 backdrop-blur-md opacity-65 hover:opacity-100 hover:border-[#0891b2] hover:bg-[#0891b2]/20 hover:text-foreground hover:shadow-[0_0_12px_rgba(8,145,178,0.25)] hover:scale-105 cursor-pointer z-20"
         >
           <span className="w-1.5 h-1.5 rounded-full bg-[#0891b2] animate-pulse" />
-          <span>{activeNode === 'build' ? 'build: passing ✓' : 'main • v2.4'}</span>
+          <span>main • v2.4</span>
+
+          {/* Connecting Line & Popover Pill (to Right Open Space) */}
+          <div className="pointer-events-none absolute left-full top-1/2 -translate-y-1/2 flex items-center opacity-0 group-hover:opacity-100 translate-x-1 group-hover:translate-x-0 transition-all duration-300 z-30">
+            <div className="flex items-center w-6 relative shrink-0">
+              <span className="w-1.5 h-1.5 rounded-full bg-[#0891b2] shadow-[0_0_8px_#0891b2]" />
+              <span className="h-[1.5px] w-full bg-gradient-to-r from-[#0891b2] via-cyan-400 to-cyan-300" />
+              <span className="w-1.5 h-1.5 rounded-full bg-cyan-300 shadow-[0_0_8px_#0891b2]" />
+            </div>
+            <span className="ml-1.5 whitespace-nowrap bg-background/95 text-[#0891b2] dark:text-cyan-300 border border-[#0891b2] px-2.5 py-0.5 rounded-full text-[9.5px] font-mono shadow-[0_0_12px_rgba(8,145,178,0.25)] backdrop-blur-md font-semibold">
+              build: passing ✓
+            </span>
+          </div>
         </motion.div>
 
         {/* 5. SPRING BOOT & POSTGRESQL */}
@@ -444,15 +444,23 @@ export default function HeroBackground() {
             repeatType: 'mirror',
             ease: 'easeInOut',
           }}
-          className={`absolute top-[100px] left-[15%] hidden xl:flex items-center gap-1.5 font-mono text-[9.5px] border px-2.5 py-1 rounded-full transition-all duration-300 backdrop-blur-md opacity-45 hover:opacity-100 ${
-            activeNode === 'spring'
-              ? 'border-[#0891b2] bg-[#0891b2]/20 text-[#0891b2] dark:text-cyan-300 shadow-sm shadow-[#0891b2]/20 scale-105 opacity-100'
-              : 'border-border/50 bg-card/30 text-muted-foreground/70'
-          }`}
+          className="group absolute top-[100px] left-[15%] hidden xl:flex items-center gap-1.5 font-mono text-[9.5px] border border-border/50 bg-card/30 text-muted-foreground/70 px-2.5 py-1 rounded-full transition-all duration-300 backdrop-blur-md opacity-50 hover:opacity-100 hover:border-[#0891b2] hover:bg-[#0891b2]/20 hover:text-foreground hover:shadow-[0_0_12px_rgba(8,145,178,0.25)] hover:scale-105 cursor-pointer z-20"
         >
           <span className="text-[#0891b2] font-bold">spring boot</span>
           <span className="text-muted-foreground/40">•</span>
           <span>postgresql</span>
+
+          {/* Connecting Line & Popover Pill (to Right Open Space) */}
+          <div className="pointer-events-none absolute left-full top-1/2 -translate-y-1/2 flex items-center opacity-0 group-hover:opacity-100 translate-x-1 group-hover:translate-x-0 transition-all duration-300 z-30">
+            <div className="flex items-center w-6 relative shrink-0">
+              <span className="w-1.5 h-1.5 rounded-full bg-[#0891b2] shadow-[0_0_8px_#0891b2]" />
+              <span className="h-[1.5px] w-full bg-gradient-to-r from-[#0891b2] via-cyan-400 to-cyan-300" />
+              <span className="w-1.5 h-1.5 rounded-full bg-cyan-300 shadow-[0_0_8px_#0891b2]" />
+            </div>
+            <span className="ml-1.5 whitespace-nowrap bg-background/95 text-[#0891b2] dark:text-cyan-300 border border-[#0891b2] px-2.5 py-0.5 rounded-full text-[9.5px] font-mono shadow-[0_0_12px_rgba(8,145,178,0.25)] backdrop-blur-md font-semibold">
+              backend: connected ✓
+            </span>
+          </div>
         </motion.div>
 
         {/* 6. PERFORMANCE & LIGHTHOUSE */}
@@ -473,19 +481,27 @@ export default function HeroBackground() {
             repeatType: 'mirror',
             ease: 'easeInOut',
           }}
-          className={`absolute top-[340px] left-[13%] hidden xl:flex items-center gap-1.5 font-mono text-[9.5px] border px-2.5 py-1 rounded-full transition-all duration-300 backdrop-blur-md opacity-45 hover:opacity-100 ${
-            activeNode === 'perf'
-              ? 'border-[#0891b2] bg-[#0891b2]/20 text-[#0891b2] dark:text-cyan-300 shadow-sm shadow-[#0891b2]/20 scale-105 opacity-100'
-              : 'border-border/50 bg-card/30 text-muted-foreground/70'
-          }`}
+          className="group absolute top-[340px] left-[13%] hidden xl:flex items-center gap-1.5 font-mono text-[9.5px] border border-border/50 bg-card/30 text-muted-foreground/70 px-2.5 py-1 rounded-full transition-all duration-300 backdrop-blur-md opacity-50 hover:opacity-100 hover:border-[#0891b2] hover:bg-[#0891b2]/20 hover:text-foreground hover:shadow-[0_0_12px_rgba(8,145,178,0.25)] hover:scale-105 cursor-pointer z-20"
         >
           <span>perf: 99/100</span>
           <span className="text-muted-foreground/40">•</span>
-          <span className="text-[#0891b2] font-medium">{activeNode === 'perf' ? 'lcp: 1.1s ✓' : 'lighthouse'}</span>
+          <span className="text-[#0891b2] font-medium">lighthouse</span>
+
+          {/* Connecting Line & Popover Pill (to Right Open Space) */}
+          <div className="pointer-events-none absolute left-full top-1/2 -translate-y-1/2 flex items-center opacity-0 group-hover:opacity-100 translate-x-1 group-hover:translate-x-0 transition-all duration-300 z-30">
+            <div className="flex items-center w-6 relative shrink-0">
+              <span className="w-1.5 h-1.5 rounded-full bg-[#0891b2] shadow-[0_0_8px_#0891b2]" />
+              <span className="h-[1.5px] w-full bg-gradient-to-r from-[#0891b2] via-cyan-400 to-cyan-300" />
+              <span className="w-1.5 h-1.5 rounded-full bg-cyan-300 shadow-[0_0_8px_#0891b2]" />
+            </div>
+            <span className="ml-1.5 whitespace-nowrap bg-background/95 text-[#0891b2] dark:text-cyan-300 border border-[#0891b2] px-2.5 py-0.5 rounded-full text-[9.5px] font-mono shadow-[0_0_12px_rgba(8,145,178,0.25)] backdrop-blur-md font-semibold">
+              lcp: 1.1s ✓
+            </span>
+          </div>
         </motion.div>
 
 
-        {/* ================= RIGHT MARGIN BADGES (Restrained Peripheral Float) ================= */}
+        {/* ================= RIGHT MARGIN BADGES (Steady Badge + Connecting Blueprint Line + Left Popover) ================= */}
 
         {/* 7. DESIGN TO CODE DEPLOY NODE */}
         <motion.div
@@ -505,15 +521,23 @@ export default function HeroBackground() {
             repeatType: 'mirror',
             ease: 'easeInOut',
           }}
-          className={`absolute top-[70px] right-[4%] hidden xl:flex items-center gap-1.5 font-mono text-[10px] border px-2.5 py-1 rounded-md transition-all duration-300 backdrop-blur-md opacity-60 hover:opacity-100 ${
-            activeNode === 'deploy'
-              ? 'border-[#0891b2] bg-[#0891b2]/20 text-[#0891b2] dark:text-cyan-300 shadow-sm shadow-[#0891b2]/20 scale-105 opacity-100'
-              : 'border-border/60 bg-card/50 text-muted-foreground/80'
-          }`}
+          className="group absolute top-[70px] right-[4%] hidden xl:flex items-center gap-1.5 font-mono text-[10px] border border-border/60 bg-card/50 text-muted-foreground/80 px-2.5 py-1 rounded-md transition-all duration-300 backdrop-blur-md opacity-65 hover:opacity-100 hover:border-[#0891b2] hover:bg-[#0891b2]/20 hover:text-foreground hover:shadow-[0_0_12px_rgba(8,145,178,0.25)] hover:scale-105 cursor-pointer z-20"
         >
           <span>design</span>
           <span className="text-muted-foreground/40">→</span>
-          <span className="text-[#0891b2] font-medium">{activeNode === 'deploy' ? 'deploy: success' : 'code'}</span>
+          <span className="text-[#0891b2] font-medium">code</span>
+
+          {/* Connecting Line & Popover Pill (to Left Open Space) */}
+          <div className="pointer-events-none absolute right-full top-1/2 -translate-y-1/2 flex items-center flex-row-reverse opacity-0 group-hover:opacity-100 -translate-x-1 group-hover:translate-x-0 transition-all duration-300 z-30">
+            <div className="flex items-center w-6 relative shrink-0">
+              <span className="w-1.5 h-1.5 rounded-full bg-[#0891b2] shadow-[0_0_8px_#0891b2]" />
+              <span className="h-[1.5px] w-full bg-gradient-to-r from-cyan-300 via-cyan-400 to-[#0891b2]" />
+              <span className="w-1.5 h-1.5 rounded-full bg-cyan-300 shadow-[0_0_8px_#0891b2]" />
+            </div>
+            <span className="mr-1.5 whitespace-nowrap bg-background/95 text-[#0891b2] dark:text-cyan-300 border border-[#0891b2] px-2.5 py-0.5 rounded-full text-[9.5px] font-mono shadow-[0_0_12px_rgba(8,145,178,0.25)] backdrop-blur-md font-semibold">
+              deploy: success ✓
+            </span>
+          </div>
         </motion.div>
 
         {/* 8. ASYNC COMPONENT NODE */}
@@ -534,13 +558,21 @@ export default function HeroBackground() {
             repeatType: 'mirror',
             ease: 'easeInOut',
           }}
-          className={`absolute top-[190px] right-[7%] hidden xl:flex items-center gap-2 font-mono text-[10px] border px-2.5 py-1 rounded-lg transition-all duration-300 backdrop-blur-md opacity-60 hover:opacity-100 ${
-            activeNode === 'component'
-              ? 'border-[#0891b2] bg-[#0891b2]/20 text-[#0891b2] dark:text-cyan-300 shadow-sm shadow-[#0891b2]/20 scale-105 opacity-100'
-              : 'border-border/60 bg-card/50 text-muted-foreground/85'
-          }`}
+          className="group absolute top-[190px] right-[7%] hidden xl:flex items-center gap-2 font-mono text-[10px] border border-border/60 bg-card/50 text-muted-foreground/85 px-2.5 py-1 rounded-lg transition-all duration-300 backdrop-blur-md opacity-65 hover:opacity-100 hover:border-[#0891b2] hover:bg-[#0891b2]/20 hover:text-foreground hover:shadow-[0_0_12px_rgba(8,145,178,0.25)] hover:scale-105 cursor-pointer z-20"
         >
-          <span>{activeNode === 'component' ? 'bundle: 4.2kB' : '<AsyncComponent />'}</span>
+          <span>{'<AsyncComponent />'}</span>
+
+          {/* Connecting Line & Popover Pill (to Left Open Space) */}
+          <div className="pointer-events-none absolute right-full top-1/2 -translate-y-1/2 flex items-center flex-row-reverse opacity-0 group-hover:opacity-100 -translate-x-1 group-hover:translate-x-0 transition-all duration-300 z-30">
+            <div className="flex items-center w-6 relative shrink-0">
+              <span className="w-1.5 h-1.5 rounded-full bg-[#0891b2] shadow-[0_0_8px_#0891b2]" />
+              <span className="h-[1.5px] w-full bg-gradient-to-r from-cyan-300 via-cyan-400 to-[#0891b2]" />
+              <span className="w-1.5 h-1.5 rounded-full bg-cyan-300 shadow-[0_0_8px_#0891b2]" />
+            </div>
+            <span className="mr-1.5 whitespace-nowrap bg-background/95 text-[#0891b2] dark:text-cyan-300 border border-[#0891b2] px-2.5 py-0.5 rounded-full text-[9.5px] font-mono shadow-[0_0_12px_rgba(8,145,178,0.25)] backdrop-blur-md font-semibold">
+              bundle: 4.2kB ✓
+            </span>
+          </div>
         </motion.div>
 
         {/* 9. STATE FLOW NODE */}
@@ -561,15 +593,23 @@ export default function HeroBackground() {
             repeatType: 'mirror',
             ease: 'easeInOut',
           }}
-          className={`absolute top-[350px] right-[2%] hidden xl:flex items-center gap-1.5 font-mono text-[10px] border px-2.5 py-1 rounded-md transition-all duration-300 backdrop-blur-md opacity-60 hover:opacity-100 ${
-            activeNode === 'state'
-              ? 'border-[#0891b2] bg-[#0891b2]/20 text-[#0891b2] dark:text-cyan-300 shadow-sm shadow-[#0891b2]/20 scale-105 opacity-100'
-              : 'border-border/60 bg-card/50 text-muted-foreground/80'
-          }`}
+          className="group absolute top-[350px] right-[2%] hidden xl:flex items-center gap-1.5 font-mono text-[10px] border border-border/60 bg-card/50 text-muted-foreground/80 px-2.5 py-1 rounded-md transition-all duration-300 backdrop-blur-md opacity-65 hover:opacity-100 hover:border-[#0891b2] hover:bg-[#0891b2]/20 hover:text-foreground hover:shadow-[0_0_12px_rgba(8,145,178,0.25)] hover:scale-105 cursor-pointer z-20"
         >
           <span className="text-[9px] text-[#0891b2] font-bold">state</span>
           <span>→</span>
           <span>view</span>
+
+          {/* Connecting Line & Popover Pill (to Left Open Space) */}
+          <div className="pointer-events-none absolute right-full top-1/2 -translate-y-1/2 flex items-center flex-row-reverse opacity-0 group-hover:opacity-100 -translate-x-1 group-hover:translate-x-0 transition-all duration-300 z-30">
+            <div className="flex items-center w-6 relative shrink-0">
+              <span className="w-1.5 h-1.5 rounded-full bg-[#0891b2] shadow-[0_0_8px_#0891b2]" />
+              <span className="h-[1.5px] w-full bg-gradient-to-r from-cyan-300 via-cyan-400 to-[#0891b2]" />
+              <span className="w-1.5 h-1.5 rounded-full bg-cyan-300 shadow-[0_0_8px_#0891b2]" />
+            </div>
+            <span className="mr-1.5 whitespace-nowrap bg-background/95 text-[#0891b2] dark:text-cyan-300 border border-[#0891b2] px-2.5 py-0.5 rounded-full text-[9.5px] font-mono shadow-[0_0_12px_rgba(8,145,178,0.25)] backdrop-blur-md font-semibold">
+              sync: reactive ✓
+            </span>
+          </div>
         </motion.div>
 
         {/* 10. PLAYWRIGHT & TESTING */}
@@ -590,15 +630,23 @@ export default function HeroBackground() {
             repeatType: 'mirror',
             ease: 'easeInOut',
           }}
-          className={`absolute top-[130px] right-[16%] hidden xl:flex items-center gap-1.5 font-mono text-[9.5px] border px-2.5 py-1 rounded-full transition-all duration-300 backdrop-blur-md opacity-45 hover:opacity-100 ${
-            activeNode === 'test'
-              ? 'border-[#0891b2] bg-[#0891b2]/20 text-[#0891b2] dark:text-cyan-300 shadow-sm shadow-[#0891b2]/20 scale-105 opacity-100'
-              : 'border-border/50 bg-card/30 text-muted-foreground/70'
-          }`}
+          className="group absolute top-[130px] right-[16%] hidden xl:flex items-center gap-1.5 font-mono text-[9.5px] border border-border/50 bg-card/30 text-muted-foreground/70 px-2.5 py-1 rounded-full transition-all duration-300 backdrop-blur-md opacity-50 hover:opacity-100 hover:border-[#0891b2] hover:bg-[#0891b2]/20 hover:text-foreground hover:shadow-[0_0_12px_rgba(8,145,178,0.25)] hover:scale-105 cursor-pointer z-20"
         >
           <span>playwright</span>
           <span className="text-muted-foreground/40">•</span>
-          <span className="text-[#0891b2] font-medium">{activeNode === 'test' ? 'test: 100% pass' : 'unit test'}</span>
+          <span className="text-[#0891b2] font-medium">unit test</span>
+
+          {/* Connecting Line & Popover Pill (to Left Open Space) */}
+          <div className="pointer-events-none absolute right-full top-1/2 -translate-y-1/2 flex items-center flex-row-reverse opacity-0 group-hover:opacity-100 -translate-x-1 group-hover:translate-x-0 transition-all duration-300 z-30">
+            <div className="flex items-center w-6 relative shrink-0">
+              <span className="w-1.5 h-1.5 rounded-full bg-[#0891b2] shadow-[0_0_8px_#0891b2]" />
+              <span className="h-[1.5px] w-full bg-gradient-to-r from-cyan-300 via-cyan-400 to-[#0891b2]" />
+              <span className="w-1.5 h-1.5 rounded-full bg-cyan-300 shadow-[0_0_8px_#0891b2]" />
+            </div>
+            <span className="mr-1.5 whitespace-nowrap bg-background/95 text-[#0891b2] dark:text-cyan-300 border border-[#0891b2] px-2.5 py-0.5 rounded-full text-[9.5px] font-mono shadow-[0_0_12px_rgba(8,145,178,0.25)] backdrop-blur-md font-semibold">
+              test: 100% pass ✓
+            </span>
+          </div>
         </motion.div>
 
         {/* 11. TAILWIND & CSS TOKENS */}
@@ -619,15 +667,23 @@ export default function HeroBackground() {
             repeatType: 'mirror',
             ease: 'easeInOut',
           }}
-          className={`absolute top-[370px] right-[13%] hidden xl:flex items-center gap-1.5 font-mono text-[9.5px] border px-2.5 py-1 rounded-full transition-all duration-300 backdrop-blur-md opacity-45 hover:opacity-100 ${
-            activeNode === 'tokens'
-              ? 'border-[#0891b2] bg-[#0891b2]/20 text-[#0891b2] dark:text-cyan-300 shadow-sm shadow-[#0891b2]/20 scale-105 opacity-100'
-              : 'border-border/50 bg-card/30 text-muted-foreground/70'
-          }`}
+          className="group absolute top-[370px] right-[13%] hidden xl:flex items-center gap-1.5 font-mono text-[9.5px] border border-border/50 bg-card/30 text-muted-foreground/70 px-2.5 py-1 rounded-full transition-all duration-300 backdrop-blur-md opacity-50 hover:opacity-100 hover:border-[#0891b2] hover:bg-[#0891b2]/20 hover:text-foreground hover:shadow-[0_0_12px_rgba(8,145,178,0.25)] hover:scale-105 cursor-pointer z-20"
         >
           <span className="text-[#0891b2] font-bold">tokens: css</span>
           <span className="text-muted-foreground/40">•</span>
           <span>tailwind</span>
+
+          {/* Connecting Line & Popover Pill (to Left Open Space) */}
+          <div className="pointer-events-none absolute right-full top-1/2 -translate-y-1/2 flex items-center flex-row-reverse opacity-0 group-hover:opacity-100 -translate-x-1 group-hover:translate-x-0 transition-all duration-300 z-30">
+            <div className="flex items-center w-6 relative shrink-0">
+              <span className="w-1.5 h-1.5 rounded-full bg-[#0891b2] shadow-[0_0_8px_#0891b2]" />
+              <span className="h-[1.5px] w-full bg-gradient-to-r from-cyan-300 via-cyan-400 to-[#0891b2]" />
+              <span className="w-1.5 h-1.5 rounded-full bg-cyan-300 shadow-[0_0_8px_#0891b2]" />
+            </div>
+            <span className="mr-1.5 whitespace-nowrap bg-background/95 text-[#0891b2] dark:text-cyan-300 border border-[#0891b2] px-2.5 py-0.5 rounded-full text-[9.5px] font-mono shadow-[0_0_12px_rgba(8,145,178,0.25)] backdrop-blur-md font-semibold">
+              design tokens v4 ✓
+            </span>
+          </div>
         </motion.div>
       </motion.div>
     </div>
